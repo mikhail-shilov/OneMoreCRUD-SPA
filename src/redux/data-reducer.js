@@ -20,14 +20,17 @@ const initalState = {
         draft: '',
         activeFilter: '',
     },
-    userCard: {
-        indexOfItem: null,
-        id: null,
-        firstName: null,
-        lastName: null,
-        email: null,
-        phone: null,
-        description: null,
+    userCard: null,
+    editor: {
+        active: false,
+        user: {
+            id: '',
+            firstName: '',
+            lastName: '',
+            email: '',
+            phone: '',
+            description: ''
+        }
     },
     dataCache: [
         {id: 1, firstName: "Рулон", lastName: "Обоев", email: "rulon@test.io", phone: "2342342"},
@@ -147,6 +150,48 @@ const tableReducer = (state = initalState, action) => {
             localState.settings.isFetching = action.mode;
             return localState;
         }
+        case 'EDITOR-SWITCH': {
+            let localState = {...state};
+            localState.editor = {...state.editor};
+            localState.editor.user = {...state.editor.user};
+            localState.editor.active = action.mode;
+            return localState;
+        }
+        case 'EDITOR-UPDATE': {
+            let localState = {...state};
+            localState.editor = {...state.editor};
+            localState.editor.user = {...state.editor.user};
+            switch (action.inputName) {
+                case 'id':
+                    localState.editor.user.id = action.value*1;
+                    break
+                case 'firstName':
+                    localState.editor.user.firstName = action.value;
+                    break
+                case 'lastName':
+                    localState.editor.user.lastName = action.value;
+                    break
+                case 'email':
+                    localState.editor.user.email = action.value;
+                    break
+                case 'phone':
+                    localState.editor.user.phone = action.value;
+                    break
+                default:
+                    console.log('Incorrect inputName...');
+                    break
+            }
+            return localState;
+        }
+        case 'INSERT-ROW': {
+            let localState = {...state};
+
+            localState.dataCache = [state.editor.user, ...state.dataCache];
+            debugger
+            return localState;
+        }
+
+
         default: {
             return state;
         }
@@ -162,7 +207,16 @@ export const setUserCard = (id, firstName, lastName, email, phone, description) 
     type: 'SET-USER-CARD',
     user: {id, firstName, lastName, email, phone, description}});
 export const switchIndicator = (mode) => ({type: 'LOADING-INDICATOR-SWITCH', mode});
+export const switchEditor = (mode) => ({type: 'EDITOR-SWITCH', mode});
 export const setCurrentPage = (currentPage) => ({type: 'SET-CURRENT-PAGE', currentPage: currentPage});
+export const insertRow = () => ({type: 'INSERT-ROW'});
+export const updateEditor = (inputName, value) => ({
+    type: 'EDITOR-UPDATE',
+    inputName: inputName,
+    value: value
+});
+
+
 
 export const getDataset = (datasetType) => (dispatch) => {
     dispatch(switchIndicator(true));
@@ -173,4 +227,11 @@ export const getDataset = (datasetType) => (dispatch) => {
 
         dispatch(switchIndicator(false));
     })
+};
+export const insertToDataset = () => (dispatch) => {
+
+        dispatch(insertRow());
+        dispatch(setFilter(''));
+        dispatch(setSortMode('id'));
+
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import Pagination from "./Pagination";
 import css from './table.module.css'
 import TableRow from "./TableRow";
+import TableEditor from "./TableEditor";
 
 function Table(props) {
 
@@ -20,12 +21,12 @@ function Table(props) {
             </td>
     )
 
-    const startItem = props.itemsPerPage*(props.currentPage-1);
-    const endItem = props.itemsPerPage*props.currentPage;
+    const startItem = props.itemsPerPage * (props.currentPage - 1);
+    const endItem = props.itemsPerPage * props.currentPage;
     const itemsCount = props.tableData.length;
     let rows = props.tableData.slice(startItem, endItem);
 
-    rows=rows.map(
+    rows = rows.map(
         row =>
             <TableRow
                 id={row.id}
@@ -40,7 +41,12 @@ function Table(props) {
 
     return (
         <div>
-            <span>{(props.activeFilter) ? 'Результаты поиска по запросу «'+props.activeFilter+'»':  '' }</span>
+            <button disabled={props.editor.active}
+                    className='datasetMenu__button'
+                    onClick={() => props.switchEditor(true)}>
+                Add record
+            </button>
+
             <table border='1' cellSpacing='0' className={css.table}>
                 <thead>
                 <tr>
@@ -48,7 +54,13 @@ function Table(props) {
                 </tr>
                 </thead>
                 <tbody>
-                {(props.isDataLoading) ? <tr><td colSpan="5" rowSpan="10">Загрузка...</td></tr> : rows}
+                {props.editor.active ?
+                    <TableEditor editor={props.editor}
+                                 switchEditor={props.switchEditor}
+                                 updateEditor={props.updateEditor}
+                                 insertToDataset={props.insertToDataset}
+                    /> : null}
+                {rows}
                 </tbody>
             </table>
             <Pagination

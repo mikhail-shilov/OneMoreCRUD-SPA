@@ -1,7 +1,16 @@
 import React from "react";
 import {connect} from 'react-redux';
 import App from "./App";
-import {getDataset, setCurrentPage, setFilter, setSortMode, setUserCard, updateDraft} from "./redux/data-reducer";
+import {
+    getDataset,
+    insertToDataset,
+    setCurrentPage,
+    setFilter,
+    setSortMode,
+    setUserCard,
+    switchEditor,
+    updateDraft, updateEditor
+} from "./redux/data-reducer";
 
 
 const mapStateToProps = (state) => {
@@ -15,10 +24,22 @@ const mapStateToProps = (state) => {
         currentPage: state.data.settings.currentPage,
         isFetching: state.data.settings.isFetching,
         filter: state.data.filter,
-        userCard: state.data.userCard
+        userCard: state.data.userCard,
+        editor: state.data.editor
     }
 };
 
-const AppContainer = connect(mapStateToProps, {getDataset, setFilter, setSortMode, updateDraft, setUserCard, setCurrentPage})(App);
+const AppContainer = connect(mapStateToProps,
+    {
+        getDataset,
+        setFilter,
+        setSortMode,
+        updateDraft,
+        setUserCard,
+        setCurrentPage,
+        switchEditor,
+        updateEditor,
+        insertToDataset
+    })(App);
 
 export default AppContainer;
