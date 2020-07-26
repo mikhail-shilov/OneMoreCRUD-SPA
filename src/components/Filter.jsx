@@ -26,7 +26,7 @@ function Filter(props) {
                 className='filter__input'
                 value={props.filterState.draft? props.filterState.draft: props.filterState.activeFilter}
                 autoFocus
-                placeholder='Фрагмент имени или фамилии'
+                placeholder='Part of firstname or lastname...'
                 onChange={updateValue}
                 onKeyPress={keyHandler}
 

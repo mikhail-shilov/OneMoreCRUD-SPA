@@ -4,7 +4,7 @@ function TableRow(props) {
 
     return (
         <tr onClick={() => {
-            props.setUserCard(props.id, props.firstName, props.lastName, props.email, props.phone, props.description);
+            props.setUserCard(props.id,  props.firstName, props.lastName, props.email, props.phone, props.description, props.address);
         }}>
             <td>{props.id}</td>
             <td>{props.firstName}</td>

@@ -4,25 +4,24 @@ function FullData(props) {
 
     if (props.userCard) {
         return (
-            <div>
-                <div>
-                    <span>Name: {props.userCard.firstName}</span>
-                    <span>Lastname: {props.userCard.lastName}</span>
-                    <span>Email: {props.userCard.email}</span>
-                    <span>Phone: {props.userCard.phone}</span>
-                </div>
-                <div>
-                    <span>Street: {props.userCard.phone}</span>
-                    <span>City: {props.userCard.phone}</span>
-                    <span>State: {props.userCard.phone}</span>
-                    <span>Zip code: {props.userCard.phone}</span>
-                </div>
-                <div>
-                    <span>Description: {props.userCard.description}</span>
+            <div className='container'>
+                <div className='userFullData'>
+                    <div className='userFullData__col1'>
+                        <span className='userFullData__label'>Выбран пользователь <strong>{props.userCard.firstName} {props.userCard.lastName}</strong></span>
+                        <span className='userFullData__label'>Адрес проживания: <b>{props.userCard.address.streetAddress}</b></span>
+                        <span className='userFullData__label'>Город: <b>{props.userCard.address.city}</b></span>
+                        <span className='userFullData__label'>Провинция/штат: <b>{props.userCard.address.state}</b></span>
+                        <span className='userFullData__label'>Индекс: <b>{props.userCard.address.zip}</b></span>
+                    </div>
+                    <div className='userFullData__col2'>
+                        <span className='userFullData__label'>Описание: <textarea  className='userFullData__description' value={props.userCard.description}></textarea></span>
+                    </div>
                 </div>
             </div>
         );
-    } else {return <div>Click to row, for more information...</div>}
+    } else {
+        return <div>Click to row, for more information...</div>
+    }
 
 }
 

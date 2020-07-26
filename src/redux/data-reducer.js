@@ -11,7 +11,7 @@ const initalState = {
         ],
         sortMode: null,
         sortDirection: null,
-        itemsPerPage: 30,
+        itemsPerPage: 40,
         currentPage: 1,
         isFetching: false, //происходит ли загрузка чего либо
         datasetType: null, //Большой или малый набор данных загружен. При запуске - null.
@@ -58,6 +58,7 @@ const tableReducer = (state = initalState, action) => {
             let localState = {...state};
             localState.settings = {...state.settings};
             localState.tableDataOutput = [...state.tableDataOutput];
+            localState.settings.currentPage = 1;
 
             if (localState.settings.sortMode === action.mode)
                 if (localState.settings.sortDirection === 'asc')
@@ -163,7 +164,7 @@ const tableReducer = (state = initalState, action) => {
             localState.editor.user = {...state.editor.user};
             switch (action.inputName) {
                 case 'id':
-                    localState.editor.user.id = action.value*1;
+                    localState.editor.user.id = action.value * 1;
                     break
                 case 'firstName':
                     localState.editor.user.firstName = action.value;
@@ -185,9 +186,7 @@ const tableReducer = (state = initalState, action) => {
         }
         case 'INSERT-ROW': {
             let localState = {...state};
-
             localState.dataCache = [state.editor.user, ...state.dataCache];
-            debugger
             return localState;
         }
 
@@ -201,11 +200,12 @@ export default tableReducer;
 
 export const setData = (data, datasetType) => ({type: 'SET-DATA', data, datasetType});
 export const updateDraft = (value) => ({type: 'UPDATE-FILTER-DRAFT', value: value});
-export const setFilter = (stringToFind) => ({type: 'FILTER', stringToFind});
+export const filter = (stringToFind) => ({type: 'FILTER', stringToFind});
 export const setSortMode = (mode) => ({type: 'SORT', mode: mode});
-export const setUserCard = (id, firstName, lastName, email, phone, description) => ({
+export const setUserCard = (id, firstName, lastName, email, phone, description, address) => ({
     type: 'SET-USER-CARD',
-    user: {id, firstName, lastName, email, phone, description}});
+    user: {id, firstName, lastName, email, phone, description, address}
+});
 export const switchIndicator = (mode) => ({type: 'LOADING-INDICATOR-SWITCH', mode});
 export const switchEditor = (mode) => ({type: 'EDITOR-SWITCH', mode});
 export const setCurrentPage = (currentPage) => ({type: 'SET-CURRENT-PAGE', currentPage: currentPage});
@@ -215,7 +215,6 @@ export const updateEditor = (inputName, value) => ({
     inputName: inputName,
     value: value
 });
-
 
 
 export const getDataset = (datasetType) => (dispatch) => {
@@ -230,8 +229,12 @@ export const getDataset = (datasetType) => (dispatch) => {
 };
 export const insertToDataset = () => (dispatch) => {
 
-        dispatch(insertRow());
-        dispatch(setFilter(''));
-        dispatch(setSortMode('id'));
+    dispatch(insertRow());
+    dispatch(setSortMode(null));
+    dispatch(setFilter(''));
 
+};
+export const setFilter = (stringToFind) => (dispatch) => {
+    dispatch(filter(stringToFind));
+    dispatch(setCurrentPage(1));
 }

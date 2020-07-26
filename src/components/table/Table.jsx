@@ -35,12 +35,13 @@ function Table(props) {
                 email={row.email}
                 phone={row.phone}
                 description={row.description}
+                address={row.address}
                 setUserCard={props.setUserCard}
             />
     );
 
     return (
-        <div>
+        <div className='container'>
             <button disabled={props.editor.active}
                     className='datasetMenu__button'
                     onClick={() => props.switchEditor(true)}>

@@ -11,6 +11,23 @@ function TableEditor(props) {
         props.insertToDataset();
     }
 
+    const id = props.editor.user.id;
+    const firstName = props.editor.user.firstName;
+    const lastName = props.editor.user.lastName;
+    const email = props.editor.user.email;
+    const phone = props.editor.user.phone;
+
+
+    const fillChecker = (field1, field2, field3, field4, field5) => {
+        if (field1.length === 0 ||
+            field2.length === 0 ||
+            field3.length === 0 ||
+            field4.length === 0 ||
+            field5.length === 0) {
+            return true;
+        } else return false;
+    }
+
 
     return ([
         <tr>
@@ -49,7 +66,11 @@ function TableEditor(props) {
         <tr>
             <td colSpan='5'>
                 <button className='datasetMenu__button'
-                onClick={insertHandler}>Save record</button>
+                        onClick={insertHandler}
+                        disabled={fillChecker(id, firstName, lastName, email, phone)}>
+                    Save record
+
+                </button>
                 <button className='datasetMenu__button'
                         onClick={() => props.switchEditor(false)}>Cancel
                 </button>
