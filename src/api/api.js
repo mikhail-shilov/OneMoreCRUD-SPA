@@ -15,5 +15,9 @@ export const getData = (mode) => {
         }
     }
 
-    return fetch(path).then(response => response.data).then(data => console.log(data));
+    return fetch(path).then(response => response.json());
+
+
+
+
 }

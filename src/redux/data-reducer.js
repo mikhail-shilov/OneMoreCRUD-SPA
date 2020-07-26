@@ -1,3 +1,5 @@
+import {getData} from "../api/api";
+
 const initalState = {
     settings: {
         listColumnsOfTable: [
@@ -11,8 +13,8 @@ const initalState = {
         sortDirection: 'asc',
         itemsPerPage: 10,
         currentPage: 1,
-        isDataLoading: false, //происходит ли загрузка чего либо
-        dataSet: null, //Большой или малый набор данных загружен. При запуске - null.
+        isFetching: false, //происходит ли загрузка чего либо
+        datasetType: null, //Большой или малый набор данных загружен. При запуске - null.
     },
     dataCache: [
         {id: 1, firstName: "Рулон", lastName: "Обоев", email: "rulon@test.io", phone: "2342342"},
@@ -29,23 +31,15 @@ const initalState = {
 
 const tableReducer = (state = initalState, action) => {
     switch (action.type) {
-        case 'LOAD-DATA': {
+        case 'SET-DATA': {
             let localState = {...state};
             localState.settings = {...state.settings};
-
-            //В action передаётся либо 'internal' либо объект с данными
-            if (action.data === 'internal') localState.tableData = [...state.tableDataIntetnal]
-            else localState.tableData = action.data;
-            localState.settings.currentPage = 1;
-            localState.tableDataOutput = localState.tableData;
-            localState.tableDataOutput.sort((a, b) => {
-                if (a.id < b.id) return (localState.settings.sortDirection === 'asc') ? -1 : 1;
-                if (a.id > b.id) return (localState.settings.sortDirection === 'asc') ? 1 : -1;
-                return 0;
-            });
+            localState.settings.datasetType = action.datasetType;
+            localState.dataCache = action.data;
+            localState.tableDataOutput = action.data;
             return localState;
         }
-        case 'RESORT': {
+        case 'SORT': {
             let localState = {...state};
             localState.settings = {...state.settings};
             localState.tableDataOutput = [...state.tableDataOutput];
@@ -95,9 +89,34 @@ const tableReducer = (state = initalState, action) => {
                 if (elemA > elemB) return (localState.settings.sortDirection === 'asc') ? 1 : -1;
                 return 0;
             });
-            localState.settings.currentPage = 1;
             return localState;
         }
+        case 'FILTER': {
+            let localState = {...state};
+            localState.settings = {...state.settings};
+
+            const textToFind = action.stringToFind.toLowerCase();
+
+            localState.tableDataOutput = state.dataCache.filter(
+                (item) => {
+                    if (
+                        (String(item.id).toLowerCase().includes(textToFind)) ||
+                        (item.firstName.toLowerCase().includes(textToFind)) ||
+                        (item.lastName.toLowerCase().includes(textToFind))
+                    ) return 1;
+                    else return 0;
+                }
+            );
+            localState.settings.activeFilter = textToFind;
+            localState.settings.findDraft = '';
+            return localState;
+        }
+
+
+
+
+
+
         case 'SET-CURRENT-PAGE': {
             let localState = {...state};
             localState.settings = {...state.settings};
@@ -107,8 +126,7 @@ const tableReducer = (state = initalState, action) => {
         case 'LOADING-INDICATOR-SWITCH': {
             let localState = {...state};
             localState.settings = {...state.settings};
-            (localState.settings.isDataLoading === true) ? localState.settings.isDataLoading = false : localState.settings.isDataLoading = true;
-            console.log(localState.settings.isDataLoading);
+            localState.settings.isFetching = action.mode;
             return localState;
         }
         default: {
@@ -118,10 +136,18 @@ const tableReducer = (state = initalState, action) => {
 };
 export default tableReducer;
 
-export const loadAC = (data) => ({type: 'LOAD-DATA', data: data});
-export const switchIndicator = () => ({type: 'LOADING-INDICATOR-SWITCH'});
-export const setSortModeAC = (mode) => ({type: 'RESORT', mode: mode});
-export const dataFilterAC = () => ({type: 'FILTER'});
-export const updateFindStringAC = (value) => ({type: 'UPDATE-FIND-STRING', value: value});
-export const setCurrentPageAC = (currentPage) => ({type: 'SET-CURRENT-PAGE', currentPage: currentPage});
+export const setData = (data, datasetType) => ({type: 'SET-DATA', data, datasetType});
+export const setFilter = (stringToFind) => ({type: 'FILTER', stringToFind});
 
+export const switchIndicator = (mode) => ({type: 'LOADING-INDICATOR-SWITCH', mode});
+export const setCurrentPage = (currentPage) => ({type: 'SET-CURRENT-PAGE', currentPage: currentPage});
+
+export const getDataset = (datasetType) => (dispatch) => {
+    dispatch(switchIndicator(true));
+    getData(datasetType).then(data => {
+        dispatch(setData(data, datasetType));
+        dispatch(setFilter(''));
+
+        dispatch(switchIndicator(false));
+    })
+}
