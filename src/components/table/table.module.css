@@ -1,0 +1,93 @@
+.header {
+    font-size: 28px;
+    margin: 50px 0 40px;
+}
+
+.table {
+    border: 1px solid #fff;
+    width: 100%;
+    margin: auto;
+}
+
+a {
+    cursor: pointer;
+}
+
+table {
+    font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+    font-size: 20px;
+    border-collapse: collapse;
+    text-align: center;
+    border-width: 1px 0 0 1px;
+    border-color: #fff;
+}
+
+thead {
+    background-color: burlywood;
+    color: #fff;
+}
+
+th, td {
+    border-style: solid;
+    border-width: 0 1px 1px 0;
+    border-color: white;
+}
+
+td {
+    width: 20%;
+    height: 50px;
+}
+
+td:first-child {
+    width: 7%;
+    min-width: 2rem;
+    /*background: #D8E6F3;*/
+}
+
+tbody tr:hover {
+    background-color: antiquewhite;
+}
+
+@media screen and (max-width: 768px) {
+    table {
+        font-size: 12px;
+    }
+
+    td {
+        height: 30px;
+    }
+
+    .table {
+        width: 95%;
+    }
+}
+
+.paginationArea {
+    margin: 50px 0;
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.numberWrapper {
+    width: 25px;
+    height: 25px;
+    display: inline-flex; /* Отображать как строчный элемент */
+    margin-right: 5px; /* Отступ слева */
+    border: 1px solid #000; /* Рамка вокруг текста */
+    padding: 2px; /* Поля вокруг текста */
+    justify-content: center;
+    align-items: center;
+    background-color: burlywood;
+}
+
+.numberActive {
+    background-color: #282c34;
+}
+
+.numberWrapper a {
+    text-decoration: none;
+    color: #FFFFFF;
+}
