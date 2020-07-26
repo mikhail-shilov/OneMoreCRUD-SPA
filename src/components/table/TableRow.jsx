@@ -3,7 +3,9 @@ import React from 'react';
 function TableRow(props) {
 
     return (
-        <tr>
+        <tr onClick={() => {
+            props.setUserCard(props.id, props.firstName, props.lastName, props.email, props.phone, props.description);
+        }}>
             <td>{props.id}</td>
             <td>{props.firstName}</td>
             <td>{props.lastName}</td>

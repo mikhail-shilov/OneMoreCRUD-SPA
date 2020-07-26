@@ -9,12 +9,25 @@ const initalState = {
             {name: 'eMail', label: 'Почта'},
             {name: 'telNo', label: 'Телефон'}
         ],
-        sortMode: 'id',
-        sortDirection: 'asc',
-        itemsPerPage: 10,
+        sortMode: null,
+        sortDirection: null,
+        itemsPerPage: 30,
         currentPage: 1,
         isFetching: false, //происходит ли загрузка чего либо
         datasetType: null, //Большой или малый набор данных загружен. При запуске - null.
+    },
+    filter: {
+        draft: '',
+        activeFilter: '',
+    },
+    userCard: {
+        indexOfItem: null,
+        id: null,
+        firstName: null,
+        lastName: null,
+        email: null,
+        phone: null,
+        description: null,
     },
     dataCache: [
         {id: 1, firstName: "Рулон", lastName: "Обоев", email: "rulon@test.io", phone: "2342342"},
@@ -36,7 +49,6 @@ const tableReducer = (state = initalState, action) => {
             localState.settings = {...state.settings};
             localState.settings.datasetType = action.datasetType;
             localState.dataCache = action.data;
-            localState.tableDataOutput = action.data;
             return localState;
         }
         case 'SORT': {
@@ -107,20 +119,26 @@ const tableReducer = (state = initalState, action) => {
                     else return 0;
                 }
             );
-            localState.settings.activeFilter = textToFind;
-            localState.settings.findDraft = '';
+            localState.filter.activeFilter = textToFind;
+            localState.filter.draft = '';
             return localState;
         }
-
-
-
-
-
+        case 'UPDATE-FILTER-DRAFT': {
+            let localState = {...state};
+            localState.filter = {...state.filter};
+            localState.filter.draft = action.value;
+            return localState;
+        }
 
         case 'SET-CURRENT-PAGE': {
             let localState = {...state};
             localState.settings = {...state.settings};
             localState.settings.currentPage = action.currentPage;
+            return localState;
+        }
+        case 'SET-USER-CARD': {
+            let localState = {...state};
+            localState.userCard = action.user;
             return localState;
         }
         case 'LOADING-INDICATOR-SWITCH': {
@@ -137,8 +155,12 @@ const tableReducer = (state = initalState, action) => {
 export default tableReducer;
 
 export const setData = (data, datasetType) => ({type: 'SET-DATA', data, datasetType});
+export const updateDraft = (value) => ({type: 'UPDATE-FILTER-DRAFT', value: value});
 export const setFilter = (stringToFind) => ({type: 'FILTER', stringToFind});
-
+export const setSortMode = (mode) => ({type: 'SORT', mode: mode});
+export const setUserCard = (id, firstName, lastName, email, phone, description) => ({
+    type: 'SET-USER-CARD',
+    user: {id, firstName, lastName, email, phone, description}});
 export const switchIndicator = (mode) => ({type: 'LOADING-INDICATOR-SWITCH', mode});
 export const setCurrentPage = (currentPage) => ({type: 'SET-CURRENT-PAGE', currentPage: currentPage});
 
@@ -147,6 +169,7 @@ export const getDataset = (datasetType) => (dispatch) => {
     getData(datasetType).then(data => {
         dispatch(setData(data, datasetType));
         dispatch(setFilter(''));
+        dispatch(setSortMode('id'));
 
         dispatch(switchIndicator(false));
     })

@@ -5,19 +5,19 @@ function FullData(props) {
     return (
         <div>
             <div>
-                <span>Name:</span>
-                <span>Lastname:</span>
-                <span>Email:</span>
-                <span>Phone:</span>
+                <span>Name: {props.userCard.firstName}</span>
+                <span>Lastname: {props.userCard.lastName}</span>
+                <span>Email: {props.userCard.email}</span>
+                <span>Phone: {props.userCard.phone}</span>
             </div>
             <div>
-                <span>Street:</span>
-                <span>City:</span>
-                <span>State:</span>
-                <span>Zip code:</span>
+                <span>Street: {props.userCard.phone}</span>
+                <span>City: {props.userCard.phone}</span>
+                <span>State: {props.userCard.phone}</span>
+                <span>Zip code: {props.userCard.phone}</span>
             </div>
             <div>
-                <span>Description:</span>
+                <span>Description: {props.userCard.description}</span>
             </div>
         </div>
     );

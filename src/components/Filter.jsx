@@ -2,15 +2,37 @@ import React from 'react';
 
 function Filter(props) {
 
+
+    const findHandler = () => {
+        props.setFilter(props.filterState.draft);
+    }
+    const clearHandler = () => {
+        props.updateDraft('');
+        props.setFilter('');
+    }
+    const updateValue = (event) => {
+        const text = event.target.value;
+        props.updateDraft(text);
+    }
+    const keyHandler = (event) => {
+        if (event.key === 'Enter') {
+            props.setFilter(event.target.value);
+        }
+    };
+
     return (
         <div className='filter'>
             <input
                 className='filter__input'
-                value='{props.findString}'
+                value={props.filterState.draft? props.filterState.draft: props.filterState.activeFilter}
                 autoFocus
                 placeholder='Фрагмент имени или фамилии'
+                onChange={updateValue}
+                onKeyPress={keyHandler}
+
             />
-            <button className='filter__button'>Искать</button>
+            <button className='filter__button' onClick={findHandler}>Filter</button>
+            <button className='filter__button' onClick={clearHandler}>Clear</button>
         </div>
     );
 }

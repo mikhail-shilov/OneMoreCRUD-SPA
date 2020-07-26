@@ -24,7 +24,6 @@ function Table(props) {
     const endItem = props.itemsPerPage*props.currentPage;
     const itemsCount = props.tableData.length;
     let rows = props.tableData.slice(startItem, endItem);
-    console.log(rows);
 
     rows=rows.map(
         row =>
@@ -34,7 +33,8 @@ function Table(props) {
                 lastName={row.lastName}
                 email={row.email}
                 phone={row.phone}
-                loadItemToEditor={props.loadItemToEditor}
+                description={row.description}
+                setUserCard={props.setUserCard}
             />
     );
 
