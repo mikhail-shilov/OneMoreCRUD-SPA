@@ -1,0 +1,148 @@
+#root {
+    height: 100%;
+}
+
+.App {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.App-header {
+    flex: 0 0 auto;
+    background-color: #282c34;
+    min-height: 4rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+    padding: 10px 45px;
+    flex-wrap: wrap;
+}
+
+.App-header h1 {
+    font-size: 22px;
+}
+
+.App-main {
+    flex: 1 0 auto;
+    background-color: #EEEEEE;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: normal;
+    font-size: 18px;
+    padding: 20px 0 150px 0;
+}
+
+.container {
+    width: 1280px;
+    display: block;
+    align-content: center;
+    text-align: center;
+    flex-direction: column;
+}
+
+.header {
+    width: 100%;
+    font-size: 28px;
+    margin: 50px 0 40px;
+}
+
+.App-footer {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    flex: 0 0 auto;
+    background-color: #282c34;
+    min-height: 110px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 1vmin);
+    align-items: center;
+    color: #FFF;
+}
+
+.filter {
+    display: flex;
+    font-size: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filter__input {
+    margin: 5px 10px;
+    width: 300px;
+    font-size: inherit;
+}
+
+.filter__button {
+    margin: 5px 10px;
+    width: 85px;
+    font-size: inherit;
+}
+
+.datasetMenu {
+    display: flex;
+    flex-direction: column;
+}
+
+.datasetMenu__button {
+    margin: 5px 5px 20px 5px;
+    width: 160px;
+    height: 48px;
+    font-size: 20px;
+}
+
+.userFullData {
+    display: flex;
+    flex-direction: row;
+}
+
+.userFullData__col1 {
+    flex: 1;
+    text-align: left;
+}
+
+.userFullData__col2 {
+    flex: 2;
+    text-align: left;
+
+}
+
+.userFullData__label {
+    display: block;
+}
+.userFullData__description{
+    width: 780px;
+
+    height: 65px;
+    margin: 15px 0;
+}
+
+@media screen and (max-width: 1279px) {
+    .container {
+        width: 100%;
+    }
+
+    .App-header {
+        flex: 0 0 auto;
+        background-color: #282c34;
+        min-height: 4rem;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        font-size: calc(10px + 2vmin);
+        color: white;
+        padding: 10px 45px;
+        flex-wrap: wrap;
+    }
+}
+
