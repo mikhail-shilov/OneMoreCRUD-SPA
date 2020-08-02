@@ -2,11 +2,11 @@ import React from "react";
 import {connect} from 'react-redux';
 import App from "./App";
 import {
+    applySort,
     getDataset,
     insertToDataset,
     setCurrentPage,
     setFilter,
-    setSortMode,
     setUserCard,
     switchEditor,
     updateDraft, updateEditor
@@ -33,7 +33,7 @@ const AppContainer = connect(mapStateToProps,
     {
         getDataset,
         setFilter,
-        setSortMode,
+        applySort,
         updateDraft,
         setUserCard,
         setCurrentPage,

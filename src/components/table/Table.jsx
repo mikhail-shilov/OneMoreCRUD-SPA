@@ -8,7 +8,7 @@ function Table(props) {
 
     const reSortTable = (event) => {
         let mode = event.target.name;
-        props.sortTable(mode);
+        props.applySort(mode);
     }
 
     const rowNames = props.tableColumns.map(
