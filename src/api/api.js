@@ -1,7 +1,7 @@
 export const getData = (mode) => {
 
-    const dataSetBig = 'http://www.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&delay=3&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}';
-    const dataSetSmall = 'http://www.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}';
+    const dataSetBig = 'http://www1.filltext.com/?rows=1000&id={number|1000}&firstName={firstName}&delay=3&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}';
+    const dataSetSmall = 'http://www1.filltext.com/?rows=32&id={number|1000}&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}';
 
     let path = null;
     switch (mode) {
@@ -15,7 +15,7 @@ export const getData = (mode) => {
         }
     }
 
-    return fetch(path).then(response => response.json());
+    return fetch(path).then(response => response.json()).catch(err => alert(err));
 
 
 

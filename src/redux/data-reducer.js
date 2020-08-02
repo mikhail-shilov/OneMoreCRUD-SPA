@@ -220,19 +220,19 @@ export const updateEditor = (inputName, value) => ({
 export const getDataset = (datasetType) => (dispatch) => {
     dispatch(switchIndicator(true));
     getData(datasetType).then(data => {
-        dispatch(setData(data, datasetType));
-        dispatch(setFilter(''));
-        dispatch(setSortMode('id'));
-
+        if (data) {
+            dispatch(setData(data, datasetType));
+            dispatch(setFilter(''));
+            dispatch(setSortMode('id'));
+        }
+        debugger
         dispatch(switchIndicator(false));
     })
 };
 export const insertToDataset = () => (dispatch) => {
-
     dispatch(insertRow());
     dispatch(setSortMode(null));
     dispatch(setFilter(''));
-
 };
 export const setFilter = (stringToFind) => (dispatch) => {
     dispatch(filter(stringToFind));
