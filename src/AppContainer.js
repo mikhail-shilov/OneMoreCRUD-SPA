@@ -3,12 +3,13 @@ import {connect} from 'react-redux';
 import App from "./App";
 import {
     applySort,
-    getDataset, insertRow, insertToDataset,
+    getDataset,
+    insertToDataset,
     setCurrentPage,
     setFilter,
     setUserCard,
     switchEditor,
-    updateDraft, updateEditor
+    updateDraft
 } from "./redux/data-reducer";
 
 
@@ -37,7 +38,6 @@ const AppContainer = connect(mapStateToProps,
         setUserCard,
         setCurrentPage,
         switchEditor,
-        updateEditor,
         insertToDataset
     })(App);
 

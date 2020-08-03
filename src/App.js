@@ -25,7 +25,6 @@ function App(props) {
                         tableColumns={props.tableColumns}
                         sortMode={props.sortMode}
                         sortDirection={props.sortDirection}
-                        activeFilter=''
                         itemsPerPage={props.itemsPerPage}
                         currentPage={props.currentPage}
                         tableData={props.data}
@@ -34,7 +33,6 @@ function App(props) {
                         setUserCard={props.setUserCard}
                         isEditorActive={props.isEditorActive}
                         switchEditor={props.switchEditor}
-                        updateEditor={props.updateEditor}
                         insertToDataset={props.insertToDataset}
                     />}
 
