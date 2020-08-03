@@ -3,8 +3,7 @@ import {connect} from 'react-redux';
 import App from "./App";
 import {
     applySort,
-    getDataset,
-    insertToDataset,
+    getDataset, insertRow, insertToDataset,
     setCurrentPage,
     setFilter,
     setUserCard,
@@ -25,7 +24,7 @@ const mapStateToProps = (state) => {
         isFetching: state.data.settings.isFetching,
         filter: state.data.filter,
         userCard: state.data.userCard,
-        editor: state.data.editor
+        isEditorActive: state.data.isEditorActive
     }
 };
 

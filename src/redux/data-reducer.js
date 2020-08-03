@@ -21,17 +21,8 @@ const initalState = {
         activeFilter: '',
     },
     userCard: null,
-    editor: {
-        active: false,
-        user: {
-            id: '',
-            firstName: '',
-            lastName: '',
-            email: '',
-            phone: '',
-            description: ''
-        }
-    },
+    isEditorActive: false,
+
     dataCache: [
         {id: 1, firstName: "Рулон", lastName: "Обоев", email: "rulon@test.io", phone: "2342342"},
         {id: 2, firstName: "Ушат", lastName: "Помоев", email: "ushat@test.io", phone: "2344672"},
@@ -54,18 +45,26 @@ const tableReducer = (state = initalState, action) => {
             localState.dataCache = action.data;
             return localState;
         }
+        case 'INSERT-ROW-BY-FIRST': {
+            let localState = {...state};
+            localState.dataCache = [action.record, ...state.dataCache];
+            return localState;
+        }
         case 'SETUP-SORT': {
             //устанавливаются настройки фильтрации
             let localState = {...state};
             localState.settings = {...state.settings};
 
-            if (localState.settings.sortMode === action.mode) {
-                if (localState.settings.sortDirection === 'asc')
-                    localState.settings.sortDirection = 'desc';
-                else
-                    localState.settings.sortDirection = 'asc';
-            } else localState.settings.sortDirection = 'asc';
 
+            if (action.force) localState.settings.sortDirection = 'asc';
+            else {
+                if (localState.settings.sortMode === action.mode) {
+                    if (localState.settings.sortDirection === 'asc')
+                        localState.settings.sortDirection = 'desc';
+                    else
+                        localState.settings.sortDirection = 'asc';
+                } else localState.settings.sortDirection = 'asc';
+            }
             localState.settings.sortMode = action.mode;
             return localState;
         }
@@ -160,9 +159,7 @@ const tableReducer = (state = initalState, action) => {
         }
         case 'EDITOR-SWITCH': {
             let localState = {...state};
-            localState.editor = {...state.editor};
-            localState.editor.user = {...state.editor.user};
-            localState.editor.active = action.mode;
+            localState.isEditorActive = action.mode;
             return localState;
         }
         case 'EDITOR-UPDATE': {
@@ -191,13 +188,6 @@ const tableReducer = (state = initalState, action) => {
             }
             return localState;
         }
-        case 'INSERT-ROW-BY-FIRST': {
-            let localState = {...state};
-            localState.dataCache = [state.editor.user, ...state.dataCache];
-            return localState;
-        }
-
-
         default: {
             return state;
         }
@@ -206,8 +196,11 @@ const tableReducer = (state = initalState, action) => {
 export default tableReducer;
 
 export const setupData = (data, datasetType) => ({type: 'SETUP-DATASET', data, datasetType});
-export const insertRow = () => ({type: 'INSERT-ROW-BY-FIRST'});
-export const setupSort = (mode) => ({type: 'SETUP-SORT', mode}); //remove ()!
+export const insertRow = (id, firstName, lastName, email, phone) => ({
+    type: 'INSERT-ROW-BY-FIRST',
+    record: {id, firstName, lastName, email, phone}
+});
+export const setupSort = (mode, force) => ({type: 'SETUP-SORT', mode, force}); //remove ()!
 export const doSort = () => ({type: 'DO-SORT'});
 export const setupFilter = (stringToFind) => ({type: 'SETUP-FILTER', stringToFind});
 export const doFilter = () => ({type: 'DO-FILTER'});
@@ -219,22 +212,30 @@ export const getDataset = (datasetType) => (dispatch) => {
     getData(datasetType).then(data => {
         if (data) {
             dispatch(setupData(data, datasetType));
-            dispatch(setFilter(''));
+            dispatch(setupFilter(''));
+            dispatch(doFilter());
+
             dispatch(setupSort('id'));
             dispatch(doSort());
+
         }
         dispatch(switchPreloader(false));
     })
 };
-export const insertToDataset = () => (dispatch) => {
-    dispatch(insertRow());
+export const insertToDataset = (id, firstName, lastName, email, phone) => (dispatch) => {
+    dispatch(insertRow(id, firstName, lastName, email, phone));
     dispatch(setupSort(null));
     dispatch(setFilter(''));
+    dispatch(doFilter());
+
+    //
 };
 export const setFilter = (stringToFind) => (dispatch) => {
     dispatch(setupFilter(stringToFind));
     dispatch(doFilter());
     dispatch(setCurrentPage(1));
+    dispatch(setupSort('id', true));
+    dispatch(doSort());
 }
 export const applySort = (mode) => (dispatch) => {
     dispatch(setupSort(mode));

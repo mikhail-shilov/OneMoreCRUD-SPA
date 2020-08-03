@@ -4,7 +4,6 @@ import Filter from "./components/Filter";
 import DatasetMenu from "./components/DatasetMenu";
 import Table from "./components/table/Table";
 import FullData from "./components/FullData";
-import {applySort} from "./redux/data-reducer";
 
 function App(props) {
     return (
@@ -33,7 +32,7 @@ function App(props) {
                         applySort={props.applySort}
                         setCurrentPage={props.setCurrentPage}
                         setUserCard={props.setUserCard}
-                        editor={props.editor}
+                        isEditorActive={props.isEditorActive}
                         switchEditor={props.switchEditor}
                         updateEditor={props.updateEditor}
                         insertToDataset={props.insertToDataset}

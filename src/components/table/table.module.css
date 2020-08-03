@@ -95,3 +95,7 @@ tbody tr:hover {
     color: #FFFFFF;
 }
 
+input {
+    box-sizing: border-box;
+    width: 98%;
+}

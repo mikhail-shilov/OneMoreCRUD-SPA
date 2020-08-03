@@ -42,7 +42,7 @@ function Table(props) {
 
     return (
         <div className='container'>
-            <button disabled={props.editor.active}
+            <button disabled={props.isEditorActive}
                     className='datasetMenu__button'
                     onClick={() => props.switchEditor(true)}>
                 Add record
@@ -55,8 +55,8 @@ function Table(props) {
                 </tr>
                 </thead>
                 <tbody>
-                {props.editor.active ?
-                    <TableEditor editor={props.editor}
+                {props.isEditorActive ?
+                    <TableEditor isEditorActive={props.isEditorActive}
                                  switchEditor={props.switchEditor}
                                  updateEditor={props.updateEditor}
                                  insertToDataset={props.insertToDataset}
