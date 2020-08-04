@@ -14,7 +14,7 @@ function App(props) {
                         filterState={props.filter}
                         updateDraft={props.updateDraft}
                         setFilter={props.setFilter}
-                    />: "Please select dataset for initializattion..." }
+                    />: "Please select dataset for initialization..." }
             </header>
             <main className="App-main">
                 {!(props.datasetType)
