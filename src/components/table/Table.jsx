@@ -3,8 +3,10 @@ import Pagination from "./Pagination";
 import css from './table.module.css'
 import TableRow from "./TableRow";
 import TableEditor from "./TableEditor";
+import {useSelector} from "react-redux";
 
 function Table(props) {
+    const itemsPerPage = useSelector(state => state.settings.itemsPerPage);
 
     const reSortTable = (event) => {
         let mode = event.target.name;
@@ -21,8 +23,8 @@ function Table(props) {
             </td>
     )
 
-    const startItem = props.itemsPerPage * (props.currentPage - 1);
-    const endItem = props.itemsPerPage * props.currentPage;
+    const startItem = itemsPerPage * (props.currentPage - 1);
+    const endItem = itemsPerPage * props.currentPage;
     const itemsCount = props.tableData.length;
     let rows = props.tableData.slice(startItem, endItem);
 

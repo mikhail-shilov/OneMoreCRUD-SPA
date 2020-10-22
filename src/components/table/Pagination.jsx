@@ -1,11 +1,15 @@
 import React from 'react';
 import css from './table.module.css'
+import {useSelector} from "react-redux";
 
 
 function Pagination(props) {
 
     let linksArray = [];
-    const itemsOnPage = props.itemsOnPage;
+    //const itemsOnPage = props.itemsOnPage;
+    const itemsOnPage = useSelector(state => state.settings.itemsPerPage);
+
+
     const itemsCount = props.itemsCount;
     const pagesCount = Math.ceil(itemsCount / itemsOnPage);
 
