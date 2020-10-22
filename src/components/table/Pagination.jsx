@@ -20,8 +20,8 @@ function Pagination(props) {
     return (
         <ul className={css.paginationArea}>
             {
-                linksArray.map((elem) =>
-                    <li className={(elem == props.currentPage) ? css.numberWrapper + ' ' + css.numberActive : css.numberWrapper}>
+                linksArray.map((elem, index) =>
+                    <li key={index} className={(elem === props.currentPage) ? css.numberWrapper + ' ' + css.numberActive : css.numberWrapper}>
                         <a onClick={() =>{props.setCurrentPage(elem);}}>{elem}</a>
                     </li>
                 )

@@ -33,7 +33,8 @@ const tableReducer = (state = initalState, action) => {
             let localState = {...state};
             localState.settings = {...state.settings};
             localState.settings.datasetType = action.datasetType;
-            localState.dataCache = action.data;
+            localState.dataCache = action.data.map((elem, index) => {return ({index, ...elem})});
+            //service generate non unique ID's - add 'index' field to resolve this
             return localState;
         }
         case 'INSERT-ROW-BY-FIRST': {

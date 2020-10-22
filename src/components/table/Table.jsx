@@ -14,8 +14,8 @@ function Table(props) {
     }
 
     const rowNames = props.tableColumns.map(
-        column =>
-            <td>
+        (column, index) =>
+            <td key={index}>
                 <a name={column.name} onClick={reSortTable}>
                     {column.label}
                     {(props.sortMode === column.name) ? (props.sortDirection === 'asc') ? ' ▲' : ' ▼' : ''}
@@ -26,11 +26,10 @@ function Table(props) {
     const startItem = itemsPerPage * (props.currentPage - 1);
     const endItem = itemsPerPage * props.currentPage;
     const itemsCount = props.tableData.length;
-    let rows = props.tableData.slice(startItem, endItem);
-
-    rows = rows.map(
+    let rows = props.tableData.slice(startItem, endItem).map(
         row =>
             <TableRow
+                key={row.index}
                 id={row.id}
                 firstName={row.firstName}
                 lastName={row.lastName}
@@ -41,6 +40,7 @@ function Table(props) {
                 setUserCard={props.setUserCard}
             />
     );
+
 
     return (
         <div className='container'>

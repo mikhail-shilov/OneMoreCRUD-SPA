@@ -18,6 +18,7 @@ function FullData(props) {
                         </div>
                         <div className='userFullData__col2'>
                             <span className='userFullData__label'>Описание: <textarea
+                                readOnly
                                 className='userFullData__description'
                                 value={props.userCard.description}></textarea></span>
                         </div>

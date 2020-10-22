@@ -44,7 +44,7 @@ class TableEditor extends React.Component {
 
 
         return ([
-            <tr>
+            <tr key={'editFields'}>
                 <td>
                     <input name='id'
                            value={this.state.id}
@@ -80,7 +80,7 @@ class TableEditor extends React.Component {
                     />
                 </td>
             </tr>,
-            <tr>
+            <tr key={'editControls'}>
                 <td colSpan='5'>
                     <button className='datasetMenu__button'
                             onClick={this.insertHandler}
