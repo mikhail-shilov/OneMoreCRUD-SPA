@@ -30,6 +30,7 @@ function Table(props) {
         row =>
             <TableRow
                 key={row.index}
+                index={row.index}
                 id={row.id}
                 firstName={row.firstName}
                 lastName={row.lastName}
@@ -38,6 +39,7 @@ function Table(props) {
                 description={row.description}
                 address={row.address}
                 setUserCard={props.setUserCard}
+                deleteRecord={props.deleteRecord}
             />
     );
 
@@ -54,6 +56,7 @@ function Table(props) {
                 <thead>
                 <tr>
                     {rowNames}
+                    <td>...</td>
                 </tr>
                 </thead>
                 <tbody>
@@ -63,6 +66,7 @@ function Table(props) {
                                  updateEditor={props.updateEditor}
                                  insertToDataset={props.insertToDataset}
                     /> : null}
+                {(rows.length > 0) ? rows : <td colSpan={rowNames.length + 1}>No records</td>}
                 {rows}
                 </tbody>
             </table>

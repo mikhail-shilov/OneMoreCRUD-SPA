@@ -35,11 +35,18 @@ th, td {
 
 td {
     width: 20%;
+
     height: 50px;
 }
 
 td:first-child {
     width: 7%;
+    min-width: 2rem;
+    /*background: #D8E6F3;*/
+}
+
+td:last-child {
+    width: 8%;
     min-width: 2rem;
     /*background: #D8E6F3;*/
 }

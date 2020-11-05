@@ -7,7 +7,7 @@ const initalState = {
             {name: 'firstName', label: 'Имя'},
             {name: 'lastName', label: 'Фамилия'},
             {name: 'eMail', label: 'Почта'},
-            {name: 'telNo', label: 'Телефон'}
+            {name: 'telNo', label: 'Телефон'},
         ],
         sortMode: null,
         sortDirection: null,
@@ -33,7 +33,9 @@ const tableReducer = (state = initalState, action) => {
             let localState = {...state};
             localState.settings = {...state.settings};
             localState.settings.datasetType = action.datasetType;
-            localState.dataCache = action.data.map((elem, index) => {return ({index, ...elem})});
+            localState.dataCache = action.data.map((elem, index) => {
+                return ({index, ...elem})
+            });
             //service generate non unique ID's - add 'index' field to resolve this
             return localState;
         }
@@ -43,11 +45,8 @@ const tableReducer = (state = initalState, action) => {
             return localState;
         }
         case 'SETUP-SORT': {
-            //устанавливаются настройки фильтрации
             let localState = {...state};
             localState.settings = {...state.settings};
-
-
             if (action.force) localState.settings.sortDirection = 'asc';
             else {
                 if (localState.settings.sortMode === action.mode) {
@@ -61,7 +60,6 @@ const tableReducer = (state = initalState, action) => {
             return localState;
         }
         case 'DO-SORT': {
-            //выполняется фильтрация на основании настроек
             let localState = {...state};
             localState.settings = {...state.settings};
             localState.tableDataOutput = [...state.tableDataOutput];
@@ -180,6 +178,15 @@ const tableReducer = (state = initalState, action) => {
             }
             return localState;
         }
+        case 'DELETE-RECORD': {
+            //deleted record from loadFromNetwork cache
+            let localState = {...state};
+            localState.dataCache = state.dataCache.filter(record => {
+                if (record.index === action.index) return false
+                else return true
+            });
+            return localState;
+        }
         default: {
             return state;
         }
@@ -198,6 +205,7 @@ export const setupFilter = (stringToFind) => ({type: 'SETUP-FILTER', stringToFin
 export const doFilter = () => ({type: 'DO-FILTER'});
 export const setCurrentPage = (numberOfPage) => ({type: 'SETUP-CURRENT-PAGE', numberOfPage});
 export const switchPreloader = (mode) => ({type: 'PRELOADER-SWITCH', mode});
+export const deleteRecord = (index) => ({type: 'DELETE-RECORD', index});
 
 export const getDataset = (datasetType) => (dispatch) => {
     dispatch(switchPreloader(true));
@@ -235,6 +243,14 @@ export const applySort = (mode) => (dispatch) => {
     dispatch(setCurrentPage(1));
 }
 
+export const applyDelete = (index) => (dispatch) => {
+    dispatch(deleteRecord(index));
+    dispatch(setupFilter(''));
+    dispatch(doFilter());
+    dispatch(doSort());
+
+
+}
 
 export const updateDraft = (value) => ({type: 'UPDATE-FILTER-DRAFT', value: value});
 export const switchEditor = (mode) => ({type: 'EDITOR-SWITCH', mode});

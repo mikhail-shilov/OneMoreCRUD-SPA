@@ -2,6 +2,7 @@ import React from "react";
 import {connect} from 'react-redux';
 import App from "./App";
 import {
+    applyDelete,
     applySort,
     getDataset,
     insertToDataset,
@@ -38,7 +39,8 @@ const AppContainer = connect(mapStateToProps,
         setUserCard,
         setCurrentPage,
         switchEditor,
-        insertToDataset
+        insertToDataset,
+        applyDelete
     })(App);
 
 export default AppContainer;
