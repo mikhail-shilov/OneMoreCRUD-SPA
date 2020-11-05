@@ -14,7 +14,7 @@ function TableRow(props) {
             props.address)
     }
 
-    const doubleClickHandler = () => {
+    const editHandler = (e) => {
         if (editMode) {
             toggleEditMode(false)
         } else {
@@ -23,23 +23,28 @@ function TableRow(props) {
     }
 
     const deleteHandler = (index) => {
-        console.log(index);
         props.deleteRecord(index);
+    }
+
+    const stopPropaganda = (e) => {
+        e.stopPropagation();
     }
 
 
     const viewer = () => {
         return (
-            <tr onClick={clickHandler}
-                onDoubleClick={doubleClickHandler}>
+            <tr onClick={clickHandler}>
                 <td>{props.id}</td>
                 <td>{props.firstName}</td>
                 <td>{props.lastName}</td>
                 <td>{props.email}</td>
                 <td>{props.phone}</td>
-                <td>
-                    <button onClick={doubleClickHandler}>Edit</button>
-                    <button onClick={() => {deleteHandler(props.index)}}>Delete</button>
+                <td onClick={stopPropaganda}>
+                    <button onClick={editHandler}>Edit</button>
+                    <button onClick={(e) => {
+                        deleteHandler(props.index);
+                    }}>Delete
+                    </button>
                 </td>
             </tr>
         )
@@ -54,8 +59,8 @@ function TableRow(props) {
                 <td><input value={props.email}/></td>
                 <td><input value={props.phone}/></td>
                 <td>
-                    <button onClick={doubleClickHandler}>Save</button>
-                    <button onClick={doubleClickHandler}>Cancel</button>
+                    <button onClick={editHandler}>Save</button>
+                    <button onClick={editHandler}>Cancel</button>
                 </td>
             </tr>
         )

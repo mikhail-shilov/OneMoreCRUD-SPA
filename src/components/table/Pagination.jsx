@@ -1,7 +1,6 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import css from './table.module.css'
 import {useSelector} from "react-redux";
-
 
 function Pagination(props) {
 
@@ -16,6 +15,13 @@ function Pagination(props) {
     for (let i = 1; i <= pagesCount; i++) {
         linksArray.push(i);
     }
+
+    const pageRange = () => {
+
+        if (props.currentPage >= pagesCount) props.setCurrentPage(pagesCount);
+    }
+
+    useEffect(pageRange, [itemsCount]);
 
     return (
         <ul className={css.paginationArea}>

@@ -67,7 +67,6 @@ function Table(props) {
                                  insertToDataset={props.insertToDataset}
                     /> : null}
                 {(rows.length > 0) ? rows : <td colSpan={rowNames.length + 1}>No records</td>}
-                {rows}
                 </tbody>
             </table>
             <Pagination
