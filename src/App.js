@@ -39,6 +39,7 @@ function App(props) {
                         isEditorActive={props.isEditorActive}
                         switchEditor={props.switchEditor}
                         insertToDataset={props.insertToDataset}
+                        insertToDatasetFull={props.insertToDatasetFull}
                         deleteRecord={props.applyDelete}
                     />}/>
                 <Route path='/settings' component={Settings}/>

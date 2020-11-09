@@ -2,8 +2,10 @@ import React from 'react';
 import Pagination from "./Pagination";
 import css from './table.module.css'
 import TableRow from "./TableRow";
-import TableEditor from "./TableEditor";
+import TableAddRow from "./TableAddRow";
 import {useSelector} from "react-redux";
+import InTableEditor from "./InTableEditor";
+import RecordEditor from "./RecordEditor";
 
 function Table(props) {
     const itemsPerPage = useSelector(state => state.settings.itemsPerPage);
@@ -51,7 +53,7 @@ function Table(props) {
                     onClick={() => props.switchEditor(true)}>
                 Add record
             </button>
-
+            <RecordEditor insertData={props.insertToDatasetFull}/>
             <table border='1' cellSpacing='0' className={css.table}>
                 <thead>
                 <tr>
@@ -59,9 +61,14 @@ function Table(props) {
                     <td>...</td>
                 </tr>
                 </thead>
+
+
+
                 <tbody>
+
+
                 {props.isEditorActive ?
-                    <TableEditor isEditorActive={props.isEditorActive}
+                    <TableAddRow isEditorActive={props.isEditorActive}
                                  switchEditor={props.switchEditor}
                                  updateEditor={props.updateEditor}
                                  insertToDataset={props.insertToDataset}

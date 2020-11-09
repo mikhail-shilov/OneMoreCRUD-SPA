@@ -5,7 +5,7 @@ import {
     applyDelete,
     applySort,
     getDataset,
-    insertToDataset,
+    insertToDataset, insertToDatasetFull,
     setCurrentPage,
     setFilter,
     setUserCard,
@@ -40,6 +40,7 @@ const AppContainer = connect(mapStateToProps,
         setCurrentPage,
         switchEditor,
         insertToDataset,
+        insertToDatasetFull,
         applyDelete
     })(App);
 

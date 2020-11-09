@@ -1,7 +1,7 @@
 import React from 'react';
 import css from './table.module.css';
 
-class TableEditor extends React.Component {
+class TableAddRow extends React.Component {
     state = {
         id: '',
         firstName: '',
@@ -98,4 +98,4 @@ class TableEditor extends React.Component {
 }
 
 
-export default TableEditor;
+export default TableAddRow;

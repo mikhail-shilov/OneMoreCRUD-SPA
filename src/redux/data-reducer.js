@@ -44,6 +44,37 @@ const tableReducer = (state = initalState, action) => {
             localState.dataCache = [action.record, ...state.dataCache];
             return localState;
         }
+        case 'INSERT-ROW-BY-FIRST-FULL': {
+            let localState = {...state};
+            let {
+                index, id, firstName, lastName, email, phone,
+                streetAddress, city, province, zip, description
+            } = action.record;
+
+
+            let indexData = [...localState.dataCache];
+            indexData.sort((a, b) => {
+                if (a.index > b.index) return -1;
+                if (a.index == b.index) return 0;
+                if (a.index < b.index) return 1;
+            });
+            index = indexData[0].index * 1 + 1;
+            id = id * 1;
+
+            let record = {
+                index,
+                id,
+                firstName,
+                lastName,
+                email,
+                phone,
+                'address': {streetAddress, city, 'state': province, zip},
+                description
+            }
+            console.log(record);
+            localState.dataCache = [record, ...state.dataCache];
+            return localState;
+        }
         case 'SETUP-SORT': {
             let localState = {...state};
             localState.settings = {...state.settings};
@@ -62,41 +93,43 @@ const tableReducer = (state = initalState, action) => {
         case 'DO-SORT': {
             let localState = {...state};
             localState.settings = {...state.settings};
-            localState.tableDataOutput = [...state.tableDataOutput];
-
-            localState.tableDataOutput.sort((a, b) => {
-                let elemA;
-                let elemB;
-                switch (localState.settings.sortMode) {
-                    case 'id':
-                        elemA = a.id;
-                        elemB = b.id;
-                        break
-                    case 'firstName':
-                        elemA = a.firstName;
-                        elemB = b.firstName;
-                        break
-                    case 'lastName':
-                        elemA = a.lastName;
-                        elemB = b.lastName;
-                        break
-                    case 'eMail':
-                        elemA = a.email;
-                        elemB = b.email;
-                        break
-                    case 'telNo':
-                        elemA = a.phone;
-                        elemB = b.phone;
-                        break
-                    default:
-                        elemA = a.id;
-                        elemB = b.id;
-                        break
-                }
-                if (elemA < elemB) return (localState.settings.sortDirection === 'asc') ? -1 : 1;
-                if (elemA > elemB) return (localState.settings.sortDirection === 'asc') ? 1 : -1;
-                return 0;
-            });
+            //localState.tableDataOutput = [...state.tableDataOutput];
+            localState.dataCache = [...state.dataCache];
+            if (localState.settings.sortMode !== null) {
+                localState.dataCache.sort((a, b) => {
+                    let elemA;
+                    let elemB;
+                    switch (localState.settings.sortMode) {
+                        case 'id':
+                            elemA = a.id;
+                            elemB = b.id;
+                            break
+                        case 'firstName':
+                            elemA = a.firstName;
+                            elemB = b.firstName;
+                            break
+                        case 'lastName':
+                            elemA = a.lastName;
+                            elemB = b.lastName;
+                            break
+                        case 'eMail':
+                            elemA = a.email;
+                            elemB = b.email;
+                            break
+                        case 'telNo':
+                            elemA = a.phone;
+                            elemB = b.phone;
+                            break
+                        default:
+                            elemA = a.id;
+                            elemB = b.id;
+                            break
+                    }
+                    if (elemA < elemB) return (localState.settings.sortDirection === 'asc') ? -1 : 1;
+                    if (elemA > elemB) return (localState.settings.sortDirection === 'asc') ? 1 : -1;
+                    return 0;
+                });
+            }
             return localState;
         }
         case 'SETUP-FILTER': {
@@ -199,7 +232,11 @@ export const insertRow = (id, firstName, lastName, email, phone) => ({
     type: 'INSERT-ROW-BY-FIRST',
     record: {id, firstName, lastName, email, phone}
 });
-export const setupSort = (mode, force) => ({type: 'SETUP-SORT', mode, force}); //remove ()!
+export const insertRowFull = (record) => ({
+    type: 'INSERT-ROW-BY-FIRST-FULL',
+    record
+});
+export const setupSort = (mode, force) => ({type: 'SETUP-SORT', mode, force});
 export const doSort = () => ({type: 'DO-SORT'});
 export const setupFilter = (stringToFind) => ({type: 'SETUP-FILTER', stringToFind});
 export const doFilter = () => ({type: 'DO-FILTER'});
@@ -222,14 +259,21 @@ export const getDataset = (datasetType) => (dispatch) => {
         dispatch(switchPreloader(false));
     })
 };
+
 export const insertToDataset = (id, firstName, lastName, email, phone) => (dispatch) => {
     dispatch(insertRow(id, firstName, lastName, email, phone));
     dispatch(setupSort(null));
     dispatch(setFilter(''));
     dispatch(doFilter());
-
-    //
 };
+
+export const insertToDatasetFull = (record) => (dispatch) => {
+    dispatch(insertRowFull(record));
+    dispatch(setupSort(null));
+    dispatch(setupFilter(''));
+    dispatch(doFilter());
+};
+
 export const setFilter = (stringToFind) => (dispatch) => {
     dispatch(setupFilter(stringToFind));
     dispatch(doFilter());
@@ -240,6 +284,8 @@ export const setFilter = (stringToFind) => (dispatch) => {
 export const applySort = (mode) => (dispatch) => {
     dispatch(setupSort(mode));
     dispatch(doSort());
+    dispatch(setupFilter(''));
+    dispatch(doFilter());
     dispatch(setCurrentPage(1));
 }
 
@@ -247,7 +293,7 @@ export const applyDelete = (index) => (dispatch) => {
     dispatch(deleteRecord(index));
     dispatch(setupFilter(''));
     dispatch(doFilter());
-    dispatch(doSort());
+    //dispatch(doSort());
 
 
 }

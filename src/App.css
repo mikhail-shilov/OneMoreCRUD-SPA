@@ -131,9 +131,9 @@
 
 .userFullData__description {
     width: 780px;
-
     height: 65px;
-    margin: 15px 0;
+    margin: 5px 0;
+    padding: 3px 7px;
 }
 
 @media screen and (max-width: 1279px) {

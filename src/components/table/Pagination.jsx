@@ -17,21 +17,21 @@ function Pagination(props) {
     }
 
     const pageRange = () => {
-
         if (props.currentPage >= pagesCount) props.setCurrentPage(pagesCount);
     }
 
     useEffect(pageRange, [itemsCount]);
 
+
+    const pagesNumbers =  linksArray.map((elem, index) =>
+        <li key={index} className={(elem === props.currentPage) ? css.numberWrapper + ' ' + css.numberActive : css.numberWrapper}>
+            <a onClick={() =>{props.setCurrentPage(elem)}}>{elem}</a>
+        </li>
+    );
+
     return (
         <ul className={css.paginationArea}>
-            {
-                linksArray.map((elem, index) =>
-                    <li key={index} className={(elem === props.currentPage) ? css.numberWrapper + ' ' + css.numberActive : css.numberWrapper}>
-                        <a onClick={() =>{props.setCurrentPage(elem);}}>{elem}</a>
-                    </li>
-                )
-            }
+            {pagesNumbers}
         </ul>
     );
 }
