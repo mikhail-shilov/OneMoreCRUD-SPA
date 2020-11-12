@@ -96,6 +96,3 @@ class TableAddRow extends React.Component {
         ]);
     }
 }
-
-
-export default TableAddRow;

@@ -8,6 +8,10 @@ function DatasetMenu(props) {
         return (
             <div className="datasetMenu">
                 <button className='datasetMenu__button' onClick={() => {
+                    props.getDataset('INTERNAL')
+                }}>Internal Dataset
+                </button>
+                <button className='datasetMenu__button' onClick={() => {
                     props.getDataset('SMALL')
                 }}>Small Dataset
                 </button>

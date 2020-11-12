@@ -33,45 +33,55 @@ const tableReducer = (state = initalState, action) => {
             let localState = {...state};
             localState.settings = {...state.settings};
             localState.settings.datasetType = action.datasetType;
-            localState.dataCache = action.data.map((elem, index) => {
-                return ({index, ...elem})
+            localState.dataCache = action.data.map((record, index) => {
+                return ({
+                    index,
+                    'id': record.id,
+                    'firstName': record.firstName,
+                    'lastName': record.lastName,
+                    'email': record.email,
+                    'phone': record.phone,
+                    'streetAddress': record.address.streetAddress,
+                    'city': record.address.city,
+                    'province': record.address.state, //I think "state" is not best name in react+redux app.
+                    'zip': record.address.zip,
+                    'description': record.description,
+                })
             });
             //service generate non unique ID's - add 'index' field to resolve this
+            //not need address as isolated unit - transform record to flat, single level form
             return localState;
         }
-        case 'INSERT-ROW-BY-FIRST': {
+        case 'UPDATE-ROW': {
             let localState = {...state};
-            localState.dataCache = [action.record, ...state.dataCache];
+            localState.dataCache = [...state.dataCache];
+            let recordUpdate = action.record;
+
+            let index = localState.dataCache.findIndex(record => (record.index === recordUpdate.index));
+
+            localState.dataCache[index] = recordUpdate;
+
             return localState;
         }
-        case 'INSERT-ROW-BY-FIRST-FULL': {
+        case 'INSERT-ROW': {
             let localState = {...state};
             let {
                 index, id, firstName, lastName, email, phone,
                 streetAddress, city, province, zip, description
             } = action.record;
 
-
-            let indexData = [...localState.dataCache];
+            let indexData = localState.dataCache.map(record => record.index);
             indexData.sort((a, b) => {
-                if (a.index > b.index) return -1;
-                if (a.index == b.index) return 0;
-                if (a.index < b.index) return 1;
+                if (a > b) return -1;
+                if (a == b) return 0;
+                if (a < b) return 1;
             });
-            index = indexData[0].index * 1 + 1;
-            id = id * 1;
+            index = Number(indexData[0] + 1); //readable variant
+            id = id * 1; //short variant
 
             let record = {
-                index,
-                id,
-                firstName,
-                lastName,
-                email,
-                phone,
-                'address': {streetAddress, city, 'state': province, zip},
-                description
+                index, id, firstName, lastName, email, phone, description, streetAddress, city, province, zip
             }
-            console.log(record);
             localState.dataCache = [record, ...state.dataCache];
             return localState;
         }
@@ -93,7 +103,6 @@ const tableReducer = (state = initalState, action) => {
         case 'DO-SORT': {
             let localState = {...state};
             localState.settings = {...state.settings};
-            //localState.tableDataOutput = [...state.tableDataOutput];
             localState.dataCache = [...state.dataCache];
             if (localState.settings.sortMode !== null) {
                 localState.dataCache.sort((a, b) => {
@@ -228,14 +237,8 @@ const tableReducer = (state = initalState, action) => {
 export default tableReducer;
 
 export const setupData = (data, datasetType) => ({type: 'SETUP-DATASET', data, datasetType});
-export const insertRow = (id, firstName, lastName, email, phone) => ({
-    type: 'INSERT-ROW-BY-FIRST',
-    record: {id, firstName, lastName, email, phone}
-});
-export const insertRowFull = (record) => ({
-    type: 'INSERT-ROW-BY-FIRST-FULL',
-    record
-});
+export const insertRow = (record) => ({type: 'INSERT-ROW', record});
+export const updateRow = (record) => ({type: 'UPDATE-ROW', record});
 export const setupSort = (mode, force) => ({type: 'SETUP-SORT', mode, force});
 export const doSort = () => ({type: 'DO-SORT'});
 export const setupFilter = (stringToFind) => ({type: 'SETUP-FILTER', stringToFind});
@@ -246,30 +249,59 @@ export const deleteRecord = (index) => ({type: 'DELETE-RECORD', index});
 
 export const getDataset = (datasetType) => (dispatch) => {
     dispatch(switchPreloader(true));
-    getData(datasetType).then(data => {
-        if (data) {
-            dispatch(setupData(data, datasetType));
-            dispatch(setupFilter(''));
-            dispatch(doFilter());
+    if (datasetType === 'INTERNAL') {
+        const data = [
+            {id: 1, firstName: "Рулон", lastName: "Обоев", email: "rulon@test.io", phone: "2342342"},
+            {id: 2, firstName: "Ушат", lastName: "Помоев", email: "ushat@test.io", phone: "2344672"},
+            {id: 3, firstName: "Черёд", lastName: "Застоев", email: "chered@test.io", phone: "1354682"},
+            {id: 4, firstName: "Налёт", lastName: "Ковбоев", email: "naljot@test.io", phone: "4337352"},
+            {id: 5, firstName: "Набег", lastName: "Комрадов", email: "nabeg@test.io", phone: "7569331"},
+            {id: 6, firstName: "Кумир", lastName: "Дебилов", email: "kumir@test.io", phone: "554833"},
+            {id: 7, firstName: "Учёт", lastName: "Побоев", email: "uchot@test.io", phone: "644861"},
+            {id: 8, firstName: "Поджог", lastName: "Сараев", email: "podjog@test.io", phone: "344866"}
+        ];
+        dispatch(setupData(data, datasetType));
+        dispatch(setupFilter(''));
+        dispatch(doFilter());
+        dispatch(setupSort('id'));
+        dispatch(doSort());
+    } else {
+        getData(datasetType).then(data => {
+            if (data) {
+                dispatch(setupData(data, datasetType));
 
-            dispatch(setupSort('id'));
-            dispatch(doSort());
 
-        }
-        dispatch(switchPreloader(false));
-    })
+                dispatch(setupSort('id'));
+                dispatch(doSort());
+                dispatch(setupFilter(''));
+                dispatch(doFilter());
+            }
+            dispatch(switchPreloader(false));
+        })
+    }
 };
 
+/*
 export const insertToDataset = (id, firstName, lastName, email, phone) => (dispatch) => {
     dispatch(insertRow(id, firstName, lastName, email, phone));
     dispatch(setupSort(null));
     dispatch(setFilter(''));
     dispatch(doFilter());
-};
+    dispatch(setCurrentPage(1));
 
-export const insertToDatasetFull = (record) => (dispatch) => {
-    dispatch(insertRowFull(record));
+};
+*/
+
+export const insertToDataset = (record) => (dispatch) => {
+    dispatch(insertRow(record));
     dispatch(setupSort(null));
+    dispatch(setupFilter(''));
+    dispatch(doFilter());
+    dispatch(setCurrentPage(1));
+};
+export const updateDataset = (record) => (dispatch) => {
+    dispatch(updateRow(record));
+    //dispatch(setupSort(null));
     dispatch(setupFilter(''));
     dispatch(doFilter());
 };
@@ -300,9 +332,9 @@ export const applyDelete = (index) => (dispatch) => {
 
 export const updateDraft = (value) => ({type: 'UPDATE-FILTER-DRAFT', value: value});
 export const switchEditor = (mode) => ({type: 'EDITOR-SWITCH', mode});
-export const setUserCard = (id, firstName, lastName, email, phone, description, address) => ({
+export const setUserCard = (recordData) => ({
     type: 'SET-USER-CARD',
-    user: {id, firstName, lastName, email, phone, description, address}
+    user: recordData
 });
 export const updateEditor = (inputName, value) => ({
     type: 'EDITOR-UPDATE',

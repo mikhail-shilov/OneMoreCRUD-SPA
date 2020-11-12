@@ -7,6 +7,7 @@ import DatasetMenu from "./components/DatasetMenu";
 import Table from "./components/table/Table";
 import FullData from "./components/FullData";
 import Settings from "./components/Settings";
+import {updateRow} from "./redux/data-reducer";
 
 function App(props) {
     return (
@@ -39,7 +40,7 @@ function App(props) {
                         isEditorActive={props.isEditorActive}
                         switchEditor={props.switchEditor}
                         insertToDataset={props.insertToDataset}
-                        insertToDatasetFull={props.insertToDatasetFull}
+                        updateDataset={props.updateDataset}
                         deleteRecord={props.applyDelete}
                     />}/>
                 <Route path='/settings' component={Settings}/>

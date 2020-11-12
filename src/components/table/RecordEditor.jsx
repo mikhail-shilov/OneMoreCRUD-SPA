@@ -4,7 +4,6 @@ import {Field, reduxForm} from 'redux-form';
 let RecordEditorForm = props => {
     return (
         <form onSubmit={props.handleSubmit}>
-            <div>{props.initialValues.index}</div>
             <div><Field name="index" component='input' type="hidden"/></div>
             <div><Field name="id" placeholder="id"  component="input" type="text"/></div>
             <div><Field name="firstName" placeholder="First name" component="input" type="text"/></div>
@@ -24,17 +23,17 @@ let RecordEditorForm = props => {
     )
 }
 
-RecordEditorForm = reduxForm({form: 'RecordEditor'})(RecordEditorForm);
+RecordEditorForm = reduxForm({form: 'RecordEditor', enableReinitialize: true})(RecordEditorForm);
 
 let RecordEditor = props => {
     const handleSubmit = (formData) => {
-        props.insertData(formData);
-        console.log(formData);
+        //props.insertData(formData);
+        props.updateDataset(formData);
     }
 
     return (
         <div>
-            <RecordEditorForm onSubmit={handleSubmit} initialValues={{'id': '131'}}/>
+            <RecordEditorForm onSubmit={handleSubmit} initialValues={props.recordInEditor}/>
         </div>
     )
 }
