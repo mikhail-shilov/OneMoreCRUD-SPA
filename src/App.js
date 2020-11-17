@@ -4,10 +4,9 @@ import {NavLink, Route} from "react-router-dom";
 import './App.css';
 import Filter from "./components/Filter";
 import DatasetMenu from "./components/DatasetMenu";
-import Table from "./components/table/Table";
+import Table from "./components/Table/Table";
 import FullData from "./components/FullData";
 import Settings from "./components/Settings";
-import {updateRow} from "./redux/data-reducer";
 
 function App(props) {
     return (
@@ -31,7 +30,6 @@ function App(props) {
                         tableColumns={props.tableColumns}
                         sortMode={props.sortMode}
                         sortDirection={props.sortDirection}
-                        itemsPerPage={props.itemsPerPage}
                         currentPage={props.currentPage}
                         tableData={props.data}
                         applySort={props.applySort}

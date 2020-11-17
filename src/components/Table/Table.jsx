@@ -1,19 +1,15 @@
 import React, {useEffect, useState} from 'react';
 import Pagination from "./Pagination";
 import css from './table.module.css'
-import TableRow from "./TableRow";
+import Row from "./Row";
 import {useSelector} from "react-redux";
-import RecordEditor from "./RecordEditor";
+import RowEditor from "./RowEditor";
 
 function Table(props) {
     //Read global setting item per page
     const itemsPerPage = useSelector(state => state.settings.itemsPerPage);
 
     const [recordInEditor, setRecordInEditor] = useState(null);
-    useEffect(() => {
-        console.log(recordInEditor)
-    }, [recordInEditor]);
-
 
     const reSortTable = (event) => {
         let mode = event.target.name;
@@ -37,18 +33,10 @@ function Table(props) {
 
     let rows = props.tableData.slice(startItem, endItem).map(
         row =>
-            <TableRow
+            <Row
                 key={row.index}
                 recordData={row}
 
-                index={row.index}
-                id={row.id}
-                firstName={row.firstName}
-                lastName={row.lastName}
-                email={row.email}
-                phone={row.phone}
-                description={row.description}
-                address={row.address}
                 setUserCard={props.setUserCard}
                 deleteRecord={props.deleteRecord}
                 setRecordInEditor={setRecordInEditor}
@@ -59,17 +47,12 @@ function Table(props) {
     return (
 
         <div className='container'>
-
-            <RecordEditor insertData={props.insertToDataset}
-                          updateDataset={props.updateDataset}
-                          recordInEditor={recordInEditor}/>
-
             <table border='1' cellSpacing='0' className={css.table}>
                 <thead>
                 <tr>
                     {rowNames}
                     <td>
-                        <button>Add</button>
+                        <button disabled={true}>Add</button>
                     </td>
                 </tr>
                 </thead>

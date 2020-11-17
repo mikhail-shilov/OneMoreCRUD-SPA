@@ -269,8 +269,6 @@ export const getDataset = (datasetType) => (dispatch) => {
         getData(datasetType).then(data => {
             if (data) {
                 dispatch(setupData(data, datasetType));
-
-
                 dispatch(setupSort('id'));
                 dispatch(doSort());
                 dispatch(setupFilter(''));

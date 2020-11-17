@@ -2,6 +2,11 @@ import React from "react";
 import {Field, reduxForm} from 'redux-form';
 
 let RecordEditorForm = props => {
+    const handleCancel = () => {
+        props.setEditMode(false);
+    }
+
+
     return (
         <form onSubmit={props.handleSubmit}>
             <div><Field name="index" component='input' type="hidden"/></div>
@@ -17,25 +22,27 @@ let RecordEditorForm = props => {
             <div><Field name="description" placeholder="description" component="textarea" type="text"/></div>
             <div>
                 <button type={"submit"}>Save</button>
-                <button type={"reset"}>Cancel</button>
+                <button type={"reset"} onClick={handleCancel}>Cancel</button>
             </div>
         </form>
     )
 }
 
-RecordEditorForm = reduxForm({form: 'RecordEditor', enableReinitialize: true})(RecordEditorForm);
+RecordEditorForm = reduxForm({form: 'RowEditor', enableReinitialize: true})(RecordEditorForm);
 
-let RecordEditor = props => {
+let RowEditor = props => {
     const handleSubmit = (formData) => {
         //props.insertData(formData);
         props.updateDataset(formData);
     }
 
+
+
     return (
         <div>
-            <RecordEditorForm onSubmit={handleSubmit} initialValues={props.recordInEditor}/>
+            <RecordEditorForm setEditMode={props.setEditMode} onSubmit={handleSubmit} initialValues={props.recordInEditor}/>
         </div>
     )
 }
 
-export default RecordEditor;
+export default RowEditor;
