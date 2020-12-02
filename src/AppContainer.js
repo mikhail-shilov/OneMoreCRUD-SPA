@@ -40,7 +40,6 @@ const AppContainer = connect(mapStateToProps,
         setCurrentPage,
         switchEditor,
         updateDataset,
-        insertToDataset,
         applyDelete
     })(App);
 

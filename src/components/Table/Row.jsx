@@ -1,18 +1,15 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import RowEditor from "./RowEditor";
 
 function Row(props) {
     const {index, id, firstName, lastName, email, phone} = props.recordData;
 
     let [editMode, setEditMode] = useState(false);
-   // let [recordInEditor, setRecordInEditor] = useState(null);
 
     const clickOnRowHandler = () => {
         props.setUserCard(props.recordData)
     }
-    const editHandler = (recordData) => {
-        //props.setRecordInEditor(recordData);
-        //setRecordInEditor(recordData);
+    const editHandler = () => {
         setEditMode(true);
     }
     const deleteHandler = (index) => {
@@ -46,6 +43,7 @@ function Row(props) {
         <>
             {!editMode ? viewer() : <RowEditor
                 recordData={props.recordData}
+                updateDataset={props.updateDataset}
                 setEditMode={setEditMode}
             />}
         </>

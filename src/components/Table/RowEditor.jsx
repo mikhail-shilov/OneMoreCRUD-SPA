@@ -42,20 +42,22 @@ RecordEditorForm = compose(
 
 let RowEditor = props => {
     const handleSubmit = (formData) => {
-        //props.insertData(formData);
-        //props.updateDataset(formData);
+        props.updateDataset(formData);
         console.log(formData);
+        props.setEditMode(false);
     }
 
+    let reactKey = 'addRecord';
+    if (props.recordData) reactKey = props.recordData.index;
 
     return (
-        <tr key={props.recordData.index}>
+        <tr key={reactKey}>
             <td colSpan={6}>
                 <div>
                     <RecordEditorForm setEditMode={props.setEditMode}
                                       onSubmit={handleSubmit}
                                       initialValues={props.recordData}
-                                      index={props.recordData.index}
+                                      index={reactKey}
                     />
                 </div>
             </td>

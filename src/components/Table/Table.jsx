@@ -9,7 +9,10 @@ function Table(props) {
     //Read global setting item per page
     const itemsPerPage = useSelector(state => state.settings.itemsPerPage);
 
-    const [recordInEditor, setRecordInEditor] = useState(null);
+    const [addRecordMode, setAddRecordMode] = useState(false);
+    const addHandler = () => {
+        setAddRecordMode(true);
+    }
 
     const reSortTable = (event) => {
         let mode = event.target.name;
@@ -26,20 +29,23 @@ function Table(props) {
             </td>
     )
 
+    const addRecord = () => {
+        return <RowEditor setEditMode={setAddRecordMode} updateDataset={props.updateDataset}/>
+    }
+
+
     const startItem = itemsPerPage * (props.currentPage - 1);
     const endItem = itemsPerPage * props.currentPage;
     const itemsCount = props.tableData.length;
-
 
     let rows = props.tableData.slice(startItem, endItem).map(
         row =>
             <Row
                 key={row.index}
                 recordData={row}
-
                 setUserCard={props.setUserCard}
+                updateDataset={props.updateDataset}
                 deleteRecord={props.deleteRecord}
-                setRecordInEditor={setRecordInEditor}
             />
     );
 
@@ -52,11 +58,12 @@ function Table(props) {
                 <tr>
                     {rowNames}
                     <td>
-                        <button disabled={true}>Add</button>
+                        <button onClick={addHandler} disabled={addRecordMode}>Add</button>
                     </td>
                 </tr>
                 </thead>
                 <tbody>
+                {addRecordMode ? addRecord() : null}
                 {(rows.length > 0) ? rows : <td colSpan={rowNames.length + 1}>No records</td>}
                 </tbody>
             </table>

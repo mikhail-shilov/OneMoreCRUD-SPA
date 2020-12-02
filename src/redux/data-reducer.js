@@ -52,37 +52,32 @@ const tableReducer = (state = initalState, action) => {
             //not need address as isolated unit - transform record to flat, single level form
             return localState;
         }
-        case 'UPDATE-ROW': {
-            let localState = {...state};
-            localState.dataCache = [...state.dataCache];
-            let recordUpdate = action.record;
-
-            let index = localState.dataCache.findIndex(record => (record.index === recordUpdate.index));
-
-            localState.dataCache[index] = recordUpdate;
-
-            return localState;
-        }
-        case 'INSERT-ROW': {
+        case 'SAVE-ROW': {
             let localState = {...state};
             let {
                 index, id, firstName, lastName, email, phone,
                 streetAddress, city, province, zip, description
             } = action.record;
 
-            let indexData = localState.dataCache.map(record => record.index);
-            indexData.sort((a, b) => {
-                if (a > b) return -1;
-                if (a == b) return 0;
-                if (a < b) return 1;
-            });
-            index = Number(indexData[0] + 1); //readable variant
-            id = id * 1; //short variant
+            if (index) {
+                let recordUpdate = action.record;
+                let indexOfTarget = localState.dataCache.findIndex(record => (record.index === recordUpdate.index));
+                localState.dataCache[indexOfTarget] = recordUpdate;
+            } else {
+                let indexData = localState.dataCache.map(record => record.index);
+                indexData.sort((a, b) => {
+                    if (a > b) return -1;
+                    if (a == b) return 0;
+                    if (a < b) return 1;
+                });
+                index = Number(indexData[0] + 1); //readable variant
+                id = id * 1; //short variant
 
-            let record = {
-                index, id, firstName, lastName, email, phone, description, streetAddress, city, province, zip
+                let record = {
+                    index, id, firstName, lastName, email, phone, description, streetAddress, city, province, zip
+                }
+                localState.dataCache = [record, ...state.dataCache];
             }
-            localState.dataCache = [record, ...state.dataCache];
             return localState;
         }
         case 'SETUP-SORT': {
@@ -237,8 +232,7 @@ const tableReducer = (state = initalState, action) => {
 export default tableReducer;
 
 export const setupData = (data, datasetType) => ({type: 'SETUP-DATASET', data, datasetType});
-export const insertRow = (record) => ({type: 'INSERT-ROW', record});
-export const updateRow = (record) => ({type: 'UPDATE-ROW', record});
+export const saveRow = (record) => ({type: 'SAVE-ROW', record});
 export const setupSort = (mode, force) => ({type: 'SETUP-SORT', mode, force});
 export const doSort = () => ({type: 'DO-SORT'});
 export const setupFilter = (stringToFind) => ({type: 'SETUP-FILTER', stringToFind});
@@ -279,27 +273,9 @@ export const getDataset = (datasetType) => (dispatch) => {
     }
 };
 
-/*
-export const insertToDataset = (id, firstName, lastName, email, phone) => (dispatch) => {
-    dispatch(insertRow(id, firstName, lastName, email, phone));
-    dispatch(setupSort(null));
-    dispatch(setFilter(''));
-    dispatch(doFilter());
-    dispatch(setCurrentPage(1));
-
-};
-*/
-
-export const insertToDataset = (record) => (dispatch) => {
-    dispatch(insertRow(record));
-    dispatch(setupSort(null));
-    dispatch(setupFilter(''));
-    dispatch(doFilter());
-    dispatch(setCurrentPage(1));
-};
 export const updateDataset = (record) => (dispatch) => {
-    dispatch(updateRow(record));
-    //dispatch(setupSort(null));
+    dispatch(saveRow(record));
+    dispatch(setupSort(null));
     dispatch(setupFilter(''));
     dispatch(doFilter());
 };
