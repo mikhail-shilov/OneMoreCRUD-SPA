@@ -2,28 +2,32 @@ import React from "react";
 import {Field, reduxForm} from 'redux-form';
 import {compose} from "redux";
 import {connect} from "react-redux";
+import {required} from "../validate/validators";
 
 let RecordEditorForm = props => {
+    const { handleSubmit, pristine, reset, submitting, invalid} = props
+
     const handleCancel = () => {
         props.setEditMode(false);
     }
 
     return (
-        <form onSubmit={props.handleSubmit}>
+        <form onSubmit={handleSubmit}>
             <div><Field name="index" component='input' type="hidden"/></div>
-            <div><Field name="id" placeholder="id" component="input" type="text"/></div>
-            <div><Field name="firstName" placeholder="First name" component="input" type="text"/></div>
-            <div><Field name="lastName" placeholder="Last name" component="input" type="text"/></div>
-            <div><Field name="email" placeholder="E-mail" component="input" type="text"/></div>
-            <div><Field name="phone" placeholder="Phone number" component="input" type="text"/></div>
-            <div><Field name="streetAddress" placeholder="Address" component="input" type="text"/></div>
-            <div><Field name="city" placeholder="City" component="input" type="text"/></div>
-            <div><Field name="province" placeholder="State" component="input" type="text"/></div>
-            <div><Field name="zip" placeholder="zip" component="input" type="text"/></div>
-            <div><Field name="description" placeholder="description" component="textarea" type="text"/></div>
+            <div><Field name="id" placeholder="id" component="input" type="text" validate={[required]}/></div>
+            <div><Field name="firstName" placeholder="First name" component="input" type="text" validate={[required]}/></div>
+            <div><Field name="lastName" placeholder="Last name" component="input" type="text" validate={[required]}/></div>
+            <div><Field name="email" placeholder="E-mail" component="input" type="text" validate={[required]}/></div>
+            <div><Field name="phone" placeholder="Phone number" component="input" type="text" validate={[required]}/></div>
+            <div><Field name="streetAddress" placeholder="Address" component="input" type="text" validate={[required]}/></div>
+            <div><Field name="city" placeholder="City" component="input" type="text" validate={[required]}/></div>
+            <div><Field name="province" placeholder="State" component="input" type="text" validate={[required]}/></div>
+            <div><Field name="zip" placeholder="zip" component="input" type="text" validate={[required]}/></div>
+            <div><Field name="description" placeholder="description" component="textarea" type="text" validate={[required]}/></div>
             <div>
-                <button type={"submit"}>Save</button>
-                <button type={"reset"} onClick={handleCancel}>Cancel</button>
+                <button type={"submit"} disabled={invalid}>Save</button>
+                <button type={"button"} disabled={pristine || submitting} onClick={reset}>Reset</button>
+                <button type={"button"} onClick={handleCancel}>Cancel</button>
             </div>
         </form>
     )
