@@ -41,11 +41,11 @@ const tableReducer = (state = initalState, action) => {
                     'lastName': record.lastName,
                     'email': record.email,
                     'phone': record.phone,
-                    'streetAddress': record.address.streetAddress,
-                    'city': record.address.city,
-                    'province': record.address.state, //I think "state" is not best name in react+redux app.
-                    'zip': record.address.zip,
-                    'description': record.description,
+                    'streetAddress': (!record.address)? null: record.address.streetAddress,
+                    'city': (!record.address)? null: record.address.city,
+                    'province': (!record.address)? null: record.address.state, //I think "state" is not best name in react+redux app.
+                    'zip': (!record.address)? null: record.address.zip,
+                    'description': (!record.description)? null : record.description,
                 })
             });
             //service generate non unique ID's - add 'index' field to resolve this

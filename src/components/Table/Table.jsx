@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Pagination from "./Pagination";
 import css from './table.module.css'
 import Row from "./Row";
@@ -32,7 +32,6 @@ function Table(props) {
     const addRecord = () => {
         return <RowEditor setEditMode={setAddRecordMode} updateDataset={props.updateDataset}/>
     }
-
 
     const startItem = itemsPerPage * (props.currentPage - 1);
     const endItem = itemsPerPage * props.currentPage;
