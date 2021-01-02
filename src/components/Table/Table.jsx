@@ -22,10 +22,10 @@ function Table(props) {
     const rowNames = props.tableColumns.map(
         (column, index) =>
             <td key={index}>
-                <a name={column.name} onClick={reSortTable}>
+                <button name={column.name} onClick={reSortTable}>
                     {column.label}
                     {(props.sortMode === column.name) ? (props.sortDirection === 'asc') ? ' ▲' : ' ▼' : ''}
-                </a>
+                </button>
             </td>
     )
 

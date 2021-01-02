@@ -7,10 +7,8 @@ import {
     getDataset,
     insertToDataset,
     setCurrentPage,
-    setFilter,
     setUserCard,
-    switchEditor, updateDataset,
-    updateDraft
+    updateDataset,
 } from "./redux/data-reducer";
 
 
@@ -33,12 +31,9 @@ const mapStateToProps = (state) => {
 const AppContainer = connect(mapStateToProps,
     {
         getDataset,
-        setFilter,
         applySort,
-        updateDraft,
         setUserCard,
         setCurrentPage,
-        switchEditor,
         updateDataset,
         applyDelete
     })(App);

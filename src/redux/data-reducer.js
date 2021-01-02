@@ -41,15 +41,15 @@ const tableReducer = (state = initalState, action) => {
                     'lastName': record.lastName,
                     'email': record.email,
                     'phone': record.phone,
-                    'streetAddress': (!record.address)? null: record.address.streetAddress,
-                    'city': (!record.address)? null: record.address.city,
-                    'province': (!record.address)? null: record.address.state, //I think "state" is not best name in react+redux app.
-                    'zip': (!record.address)? null: record.address.zip,
-                    'description': (!record.description)? null : record.description,
+                    'streetAddress': (!record.address) ? null : record.address.streetAddress,
+                    'city': (!record.address) ? null : record.address.city,
+                    'province': (!record.address) ? null : record.address.state, //I think "state" is not best name in react+redux app.
+                    'zip': (!record.address) ? null : record.address.zip,
+                    'description': (!record.description) ? null : record.description,
                 })
             });
             //service generate non unique ID's - add 'index' field to resolve this
-            //not need address as isolated unit - transform record to flat, single level form
+            //not need address as isolated unit - transform record to flat, single layer form
             return localState;
         }
         case 'SAVE-ROW': {
@@ -78,6 +78,43 @@ const tableReducer = (state = initalState, action) => {
                 }
                 localState.dataCache = [record, ...state.dataCache];
             }
+            return localState;
+        }
+        case 'INSERT-ROW': {
+            let localState = {...state};
+            let {
+                id, firstName, lastName, email, phone,
+                streetAddress, city, province, zip, description
+            } = action.record;
+
+
+            let indexData = localState.dataCache.map(record => record.index);
+            indexData.sort((a, b) => {
+                if (a > b) return -1;
+                if (a === b) return 0;
+                if (a < b) return 1;
+            });
+
+            let index = Number(indexData[0] + 1); //readable variant
+            id = id * 1; //short variant
+
+            let record = {
+                index, id, firstName, lastName, email, phone, description, streetAddress, city, province, zip
+            }
+            localState.dataCache = [record, ...state.dataCache];
+
+            return localState;
+        }
+        case 'UPDATE-ROW': {
+            let localState = {...state};
+            let {
+                index, id, firstName, lastName, email, phone,
+                streetAddress, city, province, zip, description
+            } = action.record;
+            let recordUpdate = action.record;
+            let indexOfTarget = localState.dataCache.findIndex(record => (record.index === recordUpdate.index));
+            localState.dataCache[indexOfTarget] = recordUpdate;
+
             return localState;
         }
         case 'SETUP-SORT': {
@@ -184,37 +221,6 @@ const tableReducer = (state = initalState, action) => {
             localState.settings.isFetching = action.mode;
             return localState;
         }
-        case 'EDITOR-SWITCH': {
-            let localState = {...state};
-            localState.isEditorActive = action.mode;
-            return localState;
-        }
-        case 'EDITOR-UPDATE': {
-            let localState = {...state};
-            localState.editor = {...state.editor};
-            localState.editor.user = {...state.editor.user};
-            switch (action.inputName) {
-                case 'id':
-                    localState.editor.user.id = action.value * 1;
-                    break
-                case 'firstName':
-                    localState.editor.user.firstName = action.value;
-                    break
-                case 'lastName':
-                    localState.editor.user.lastName = action.value;
-                    break
-                case 'email':
-                    localState.editor.user.email = action.value;
-                    break
-                case 'phone':
-                    localState.editor.user.phone = action.value;
-                    break
-                default:
-                    console.log('Incorrect inputName...');
-                    break
-            }
-            return localState;
-        }
         case 'DELETE-RECORD': {
             //deleted record from loadFromNetwork cache
             let localState = {...state};
@@ -281,11 +287,11 @@ export const updateDataset = (record) => (dispatch) => {
 };
 
 export const setFilter = (stringToFind) => (dispatch) => {
+    dispatch(setupSort('id', true));
+    dispatch(doSort());
     dispatch(setupFilter(stringToFind));
     dispatch(doFilter());
     dispatch(setCurrentPage(1));
-    dispatch(setupSort('id', true));
-    dispatch(doSort());
 }
 export const applySort = (mode) => (dispatch) => {
     dispatch(setupSort(mode));
@@ -304,14 +310,7 @@ export const applyDelete = (index) => (dispatch) => {
 
 }
 
-export const updateDraft = (value) => ({type: 'UPDATE-FILTER-DRAFT', value: value});
-export const switchEditor = (mode) => ({type: 'EDITOR-SWITCH', mode});
 export const setUserCard = (recordData) => ({
     type: 'SET-USER-CARD',
     user: recordData
-});
-export const updateEditor = (inputName, value) => ({
-    type: 'EDITOR-UPDATE',
-    inputName: inputName,
-    value: value
 });
