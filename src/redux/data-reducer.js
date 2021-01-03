@@ -16,10 +16,7 @@ const initalState = {
         isFetching: false, //происходит ли загрузка чего либо
         datasetType: null, //Большой или малый набор данных загружен. При запуске - null.
     },
-    filter: {
-        draft: '',
-        activeFilter: '',
-    },
+    filter: '',
     userCard: null,
     isEditorActive: false,
 
@@ -29,7 +26,7 @@ const initalState = {
 
 const tableReducer = (state = initalState, action) => {
     switch (action.type) {
-        case 'SETUP-DATASET': {
+        case 'INSERT-TABLE': {
             let localState = {...state};
             localState.settings = {...state.settings};
             localState.settings.datasetType = action.datasetType;
@@ -52,34 +49,6 @@ const tableReducer = (state = initalState, action) => {
             //not need address as isolated unit - transform record to flat, single layer form
             return localState;
         }
-        case 'SAVE-ROW': {
-            let localState = {...state};
-            let {
-                index, id, firstName, lastName, email, phone,
-                streetAddress, city, province, zip, description
-            } = action.record;
-
-            if (index) {
-                let recordUpdate = action.record;
-                let indexOfTarget = localState.dataCache.findIndex(record => (record.index === recordUpdate.index));
-                localState.dataCache[indexOfTarget] = recordUpdate;
-            } else {
-                let indexData = localState.dataCache.map(record => record.index);
-                indexData.sort((a, b) => {
-                    if (a > b) return -1;
-                    if (a == b) return 0;
-                    if (a < b) return 1;
-                });
-                index = Number(indexData[0] + 1); //readable variant
-                id = id * 1; //short variant
-
-                let record = {
-                    index, id, firstName, lastName, email, phone, description, streetAddress, city, province, zip
-                }
-                localState.dataCache = [record, ...state.dataCache];
-            }
-            return localState;
-        }
         case 'INSERT-ROW': {
             let localState = {...state};
             let {
@@ -87,34 +56,33 @@ const tableReducer = (state = initalState, action) => {
                 streetAddress, city, province, zip, description
             } = action.record;
 
-
-            let indexData = localState.dataCache.map(record => record.index);
-            indexData.sort((a, b) => {
+            //search biggest index to add new index
+            let indexes = localState.dataCache.map(record => record.index);
+            indexes.sort((a, b) => {
                 if (a > b) return -1;
-                if (a === b) return 0;
                 if (a < b) return 1;
+                return 0;
             });
-
-            let index = Number(indexData[0] + 1); //readable variant
-            id = id * 1; //short variant
+            let index = Number(indexes[0]) + 1; //readable variant
 
             let record = {
-                index, id, firstName, lastName, email, phone, description, streetAddress, city, province, zip
-            }
+                index, id, firstName, lastName, email, phone,
+                description, streetAddress, city, province, zip
+            };
             localState.dataCache = [record, ...state.dataCache];
-
             return localState;
         }
         case 'UPDATE-ROW': {
             let localState = {...state};
-            let {
-                index, id, firstName, lastName, email, phone,
-                streetAddress, city, province, zip, description
-            } = action.record;
-            let recordUpdate = action.record;
-            let indexOfTarget = localState.dataCache.findIndex(record => (record.index === recordUpdate.index));
-            localState.dataCache[indexOfTarget] = recordUpdate;
-
+            let indexOfRow = localState.dataCache.findIndex(record => (record.index === action.index));
+            localState.dataCache[indexOfRow] = action.record;
+            return localState;
+        }
+        case 'DELETE-ROW': {
+            let localState = {...state};
+            localState.dataCache = state.dataCache.filter(record => {
+                return record.index !== action.index;
+            });
             return localState;
         }
         case 'SETUP-SORT': {
@@ -123,10 +91,11 @@ const tableReducer = (state = initalState, action) => {
             if (action.force) localState.settings.sortDirection = 'asc';
             else {
                 if (localState.settings.sortMode === action.mode) {
-                    if (localState.settings.sortDirection === 'asc')
+                    if (localState.settings.sortDirection === 'asc') {
                         localState.settings.sortDirection = 'desc';
-                    else
+                    } else {
                         localState.settings.sortDirection = 'asc';
+                    }
                 } else localState.settings.sortDirection = 'asc';
             }
             localState.settings.sortMode = action.mode;
@@ -176,30 +145,20 @@ const tableReducer = (state = initalState, action) => {
         case 'SETUP-FILTER': {
             let localState = {...state};
             localState.settings = {...state.settings};
-            localState.filter.activeFilter = action.stringToFind.toLowerCase();
-            localState.filter.draft = '';//move it to local state
+            localState.filter = '';
+            if (action.stringToFind) localState.filter = action.stringToFind.toLowerCase();
             return localState;
         }
         case 'DO-FILTER': {
             let localState = {...state};
             localState.settings = {...state.settings};
-            const activeFilter = localState.filter.activeFilter;
-            localState.tableDataOutput = state.dataCache.filter((item) => {
-                    if (
+            const activeFilter = localState.filter;
+            localState.tableDataOutput = state.dataCache.filter((item) => (
                         (String(item.id).toLowerCase().includes(activeFilter)) ||
                         (item.firstName.toLowerCase().includes(activeFilter)) ||
                         (item.lastName.toLowerCase().includes(activeFilter))
-                    ) return 1;
-                    else return 0;
-                }
+                    )
             );
-            return localState;
-        }
-        case 'UPDATE-FILTER-DRAFT': {
-            //move functional to local state
-            let localState = {...state};
-            localState.filter = {...state.filter};
-            localState.filter.draft = action.value;
             return localState;
         }
         case 'SETUP-CURRENT-PAGE': {
@@ -221,15 +180,6 @@ const tableReducer = (state = initalState, action) => {
             localState.settings.isFetching = action.mode;
             return localState;
         }
-        case 'DELETE-RECORD': {
-            //deleted record from loadFromNetwork cache
-            let localState = {...state};
-            localState.dataCache = state.dataCache.filter(record => {
-                if (record.index === action.index) return false
-                else return true
-            });
-            return localState;
-        }
         default: {
             return state;
         }
@@ -237,78 +187,69 @@ const tableReducer = (state = initalState, action) => {
 };
 export default tableReducer;
 
-export const setupData = (data, datasetType) => ({type: 'SETUP-DATASET', data, datasetType});
-export const saveRow = (record) => ({type: 'SAVE-ROW', record});
+export const insertTable = (data, datasetType) => ({type: 'INSERT-TABLE', data, datasetType});
+const insertRow = (record) => ({type: 'INSERT-ROW', record});
+const updateRow = (index, record) => ({type: 'UPDATE-ROW', index, record});
+const deleteRow = (index) => ({type: 'DELETE-ROW', index});
 export const setupSort = (mode, force) => ({type: 'SETUP-SORT', mode, force});
 export const doSort = () => ({type: 'DO-SORT'});
 export const setupFilter = (stringToFind) => ({type: 'SETUP-FILTER', stringToFind});
 export const doFilter = () => ({type: 'DO-FILTER'});
 export const setCurrentPage = (numberOfPage) => ({type: 'SETUP-CURRENT-PAGE', numberOfPage});
 export const switchPreloader = (mode) => ({type: 'PRELOADER-SWITCH', mode});
+
 export const deleteRecord = (index) => ({type: 'DELETE-RECORD', index});
 
 export const getDataset = (datasetType) => (dispatch) => {
     dispatch(switchPreloader(true));
-    if (datasetType === 'INTERNAL') {
-        const data = [
-            {id: 1, firstName: "Рулон", lastName: "Обоев", email: "rulon@test.io", phone: "2342342"},
-            {id: 2, firstName: "Ушат", lastName: "Помоев", email: "ushat@test.io", phone: "2344672"},
-            {id: 3, firstName: "Черёд", lastName: "Застоев", email: "chered@test.io", phone: "1354682"},
-            {id: 4, firstName: "Налёт", lastName: "Ковбоев", email: "naljot@test.io", phone: "4337352"},
-            {id: 5, firstName: "Набег", lastName: "Комрадов", email: "nabeg@test.io", phone: "7569331"},
-            {id: 6, firstName: "Кумир", lastName: "Дебилов", email: "kumir@test.io", phone: "554833"},
-            {id: 7, firstName: "Учёт", lastName: "Побоев", email: "uchot@test.io", phone: "644861"},
-            {id: 8, firstName: "Поджог", lastName: "Сараев", email: "podjog@test.io", phone: "344866"}
-        ];
-        dispatch(setupData(data, datasetType));
-        dispatch(setupFilter(''));
-        dispatch(doFilter());
-        dispatch(setupSort('id'));
-        dispatch(doSort());
-    } else {
-        getData(datasetType).then(data => {
-            if (data) {
-                dispatch(setupData(data, datasetType));
-                dispatch(setupSort('id'));
-                dispatch(doSort());
-                dispatch(setupFilter(''));
-                dispatch(doFilter());
-            }
-            dispatch(switchPreloader(false));
-        })
-    }
+    getData(datasetType).then(data => {
+        if (data) {
+            dispatch(insertTable(data, datasetType));
+            dispatch(setupSort('id'));
+            dispatch(doSort());
+            dispatch(setupFilter(''));
+            dispatch(doFilter());
+        }
+        dispatch(switchPreloader(false));
+    })
 };
 
-export const updateDataset = (record) => (dispatch) => {
-    dispatch(saveRow(record));
+export const applyInsert = (record) => (dispatch) => {
+    dispatch(insertRow(record));
     dispatch(setupSort(null));
     dispatch(setupFilter(''));
     dispatch(doFilter());
 };
 
-export const setFilter = (stringToFind) => (dispatch) => {
+export const applyUpdate = (index, record) => (dispatch) => {
+    dispatch(updateRow(index, record));
+    dispatch(setupSort(null));
+    //dispatch(setupFilter(''));
+    dispatch(doFilter());
+};
+
+export const applyDelete = (index) => (dispatch) => {
+    dispatch(deleteRow(index));
+    //dispatch(setupFilter(''));
+    dispatch(doFilter());
+}
+
+export const applyFilter = (stringToFind) => (dispatch) => {
     dispatch(setupSort('id', true));
     dispatch(doSort());
     dispatch(setupFilter(stringToFind));
     dispatch(doFilter());
     dispatch(setCurrentPage(1));
 }
+
 export const applySort = (mode) => (dispatch) => {
     dispatch(setupSort(mode));
     dispatch(doSort());
-    dispatch(setupFilter(''));
+    //dispatch(setupFilter(''));
     dispatch(doFilter());
     dispatch(setCurrentPage(1));
 }
 
-export const applyDelete = (index) => (dispatch) => {
-    dispatch(deleteRecord(index));
-    dispatch(setupFilter(''));
-    dispatch(doFilter());
-    //dispatch(doSort());
-
-
-}
 
 export const setUserCard = (recordData) => ({
     type: 'SET-USER-CARD',

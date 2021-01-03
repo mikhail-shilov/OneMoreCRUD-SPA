@@ -25,8 +25,6 @@ const Settings = (props) => {
                 <button onClick={reduceItem}>-</button>
             </div>
             <NavLink to={'/'}>Save</NavLink>
-
-
         </div>);
 }
 

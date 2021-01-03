@@ -1,5 +1,3 @@
-import {getData} from "../api/api";
-
 const initalState = {
         isSettingsActive: false,
         itemsPerPage: 20,

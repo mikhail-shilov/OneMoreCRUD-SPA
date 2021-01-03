@@ -13,7 +13,7 @@ function Row(props) {
         setEditMode(true);
     }
     const deleteHandler = (index) => {
-        props.deleteRecord(index)
+        props.applyDelete(index)
     }
     const noClickHandler = (e) => {
         e.stopPropagation();
@@ -43,8 +43,8 @@ function Row(props) {
         <>
             {!editMode ? viewer() : <RowEditor
                 recordData={props.recordData}
-                updateDataset={props.updateDataset}
-                setEditMode={setEditMode}
+                submit={props.applyUpdate}
+                setActiveEditor={setEditMode}
             />}
         </>
     );

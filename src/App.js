@@ -7,18 +7,14 @@ import DatasetMenu from "./components/DatasetMenu";
 import Table from "./components/Table/Table";
 import FullData from "./components/FullData";
 import Settings from "./components/Settings";
+import Pagination from "./components/Pagination";
 
 function App(props) {
     return (
         <div className="App">
             <header className="App-header">
                 <NavLink to={'/settings'} className={'settingsBtn'}>&#9776;</NavLink>
-                {(props.datasetType)
-                    ? <Filter
-                        filterState={props.filter}
-                        updateDraft={props.updateDraft}
-                        setFilter={props.setFilter}
-                    /> : "Please select dataset for initialization..."}
+                {(props.datasetType) ? <Filter/> : "Please select dataset for initialization..."}
             </header>
             <main className="App-main">
 
@@ -26,24 +22,9 @@ function App(props) {
                     ? <DatasetMenu
                         isFetching={props.isFetching}
                         getDataset={props.getDataset}/>
-                    : <Table
-                        tableColumns={props.tableColumns}
-                        sortMode={props.sortMode}
-                        sortDirection={props.sortDirection}
-                        currentPage={props.currentPage}
-                        tableData={props.data}
-                        applySort={props.applySort}
-                        setCurrentPage={props.setCurrentPage}
-                        setUserCard={props.setUserCard}
-                        isEditorActive={props.isEditorActive}
-                        switchEditor={props.switchEditor}
-                        insertToDataset={props.insertToDataset}
-                        updateDataset={props.updateDataset}
-                        deleteRecord={props.applyDelete}
-                    />}/>
+                    : <Table /> }/>
+                <Route path='/' exact render={() => <Pagination/>}/>
                 <Route path='/settings' component={Settings}/>
-
-
 
 
             </main>

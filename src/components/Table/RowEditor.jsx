@@ -5,25 +5,35 @@ import {connect} from "react-redux";
 import {required} from "../validate/validators";
 
 let RecordEditorForm = props => {
-    const { handleSubmit, pristine, reset, submitting, invalid} = props
+    const {handleSubmit, pristine, reset, submitting, invalid} = props
 
     const handleCancel = () => {
-        props.setEditMode(false);
+        props.setActiveEditor(false);
     }
 
     return (
         <form onSubmit={handleSubmit}>
             <div><Field name="index" component='input' type="hidden"/></div>
             <div><Field name="id" placeholder="id" component="input" type="text" validate={[required]}/></div>
-            <div><Field name="firstName" placeholder="First name" component="input" type="text" validate={[required]}/></div>
-            <div><Field name="lastName" placeholder="Last name" component="input" type="text" validate={[required]}/></div>
+            <div><Field name="firstName" placeholder="First name" component="input" type="text" validate={[required]}/>
+            </div>
+            <div><Field name="lastName" placeholder="Last name" component="input" type="text" validate={[required]}/>
+            </div>
             <div><Field name="email" placeholder="E-mail" component="input" type="text" validate={[required]}/></div>
-            <div><Field name="phone" placeholder="Phone number" component="input" type="text" validate={[required]}/></div>
-            <div><Field name="streetAddress" placeholder="Address" component="input" type="text" validate={[required]}/></div>
+            <div><Field name="phone" placeholder="Phone number" component="input" type="text" validate={[required]}/>
+            </div>
+            <div><Field name="streetAddress" placeholder="Address" component="input" type="text" validate={[required]}/>
+            </div>
             <div><Field name="city" placeholder="City" component="input" type="text" validate={[required]}/></div>
             <div><Field name="province" placeholder="State" component="input" type="text" validate={[required]}/></div>
             <div><Field name="zip" placeholder="zip" component="input" type="text" validate={[required]}/></div>
-            <div><Field name="description" placeholder="description" component="textarea" type="text" validate={[required]}/></div>
+            <div>
+                <Field name="description"
+                       placeholder="description"
+                       component="textarea"
+                       type="text"
+                       validate={[required]}/>
+            </div>
             <div>
                 <button type={"submit"} disabled={invalid}>Save</button>
                 <button type={"button"} disabled={pristine || submitting} onClick={reset}>Reset</button>
@@ -34,21 +44,23 @@ let RecordEditorForm = props => {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-    form: 'editor'+ownProps.index,
+    form: 'editor' + ownProps.index,
 });
 
 RecordEditorForm = compose(
     connect(mapStateToProps),
-    reduxForm({ enableReinitialize: true }),
+    reduxForm({enableReinitialize: true}),
 )(RecordEditorForm);
 
-//RecordEditorForm = reduxForm({form: 'RowEditor', enableReinitialize: true })(RecordEditorForm);
-
 let RowEditor = props => {
+
     const handleSubmit = (formData) => {
-        props.updateDataset(formData);
-        console.log(formData);
-        props.setEditMode(false);
+        if (formData.index) {
+            props.submit(formData.index, formData);
+        } else {
+            props.submit(formData);
+        }
+        props.setActiveEditor(false);
     }
 
     let reactKey = 'addRecord';
@@ -58,11 +70,10 @@ let RowEditor = props => {
         <tr key={reactKey}>
             <td colSpan={6}>
                 <div>
-                    <RecordEditorForm setEditMode={props.setEditMode}
+                    <RecordEditorForm setActiveEditor={props.setActiveEditor}
                                       onSubmit={handleSubmit}
                                       initialValues={props.recordData}
-                                      index={reactKey}
-                    />
+                                      index={reactKey}/>
                 </div>
             </td>
         </tr>

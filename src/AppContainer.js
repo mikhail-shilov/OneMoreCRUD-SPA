@@ -5,10 +5,8 @@ import {
     applyDelete,
     applySort,
     getDataset,
-    insertToDataset,
     setCurrentPage,
     setUserCard,
-    updateDataset,
 } from "./redux/data-reducer";
 
 
@@ -34,7 +32,6 @@ const AppContainer = connect(mapStateToProps,
         applySort,
         setUserCard,
         setCurrentPage,
-        updateDataset,
         applyDelete
     })(App);
 

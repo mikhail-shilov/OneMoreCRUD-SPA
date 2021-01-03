@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {connect} from 'react-redux';
-import {setFilter} from "../redux/data-reducer";
+import {applyFilter} from "../redux/data-reducer";
 
 function Filter(props) {
 
@@ -11,11 +11,11 @@ function Filter(props) {
     }, [props.filterQuery]);
 
     const findHandler = () => {
-        props.setFilter(draft);
+        props.applyFilter(draft);
     }
     const clearHandler = () => {
         setDraft('');
-        props.setFilter('');
+        props.applyFilter('');
     }
     const updateValue = (event) => {
         const text = event.target.value;
@@ -45,8 +45,8 @@ function Filter(props) {
 const mapStateToProps = (state) => {
     return {
         isFetching: state.data.settings.isFetching,
-        filterQuery: state.data.filter.activeFilter, //change this string to state.data.filter after edit other code
+        filterQuery: state.data.filter,
     }
 };
 
-export default connect(mapStateToProps,{setFilter})(Filter);
+export default connect(mapStateToProps,{applyFilter})(Filter);
