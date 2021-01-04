@@ -19,7 +19,11 @@ function Pagination(props) {
     }
     const paginationElements =  pagesNumbersArray.map((elem, index) =>
         <li key={'pag-'+index} className={(elem === props.currentPage) ? css.numberWrapper + ' ' + css.numberActive : css.numberWrapper}>
-            <button onClick={() =>{props.setCurrentPage(elem)}}>{elem}</button>
+            <button className={css.keyboard_focus_button} tabIndex='0' onClick={() =>{props.setCurrentPage(elem)}}>
+                <span tabIndex='-1' className={css.keyboard_focus_button__label}>
+                    {elem}
+                </span>
+            </button>
         </li>
     );
 

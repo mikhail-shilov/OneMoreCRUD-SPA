@@ -90,12 +90,11 @@ tbody tr:hover {
 .numberWrapper {
     width: 25px;
     height: 25px;
-    display: inline-flex; /* Отображать как строчный элемент */
-    margin-right: 5px; /* Отступ слева */
-    margin-bottom: 5px; /* Отступ слева */
-
+    display: inline-flex;
+    margin-right: 5px;
+    margin-bottom: 5px;
     border: 1px solid #000; /* Рамка вокруг текста */
-    padding: 2px; /* Поля вокруг текста */
+    padding: 0; /* Поля вокруг текста */
     justify-content: center;
     align-items: center;
     background-color: burlywood;
