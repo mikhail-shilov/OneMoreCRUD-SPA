@@ -7,7 +7,9 @@ import RowEditor from "./RowEditor";
 
 function Table(props) {
     const theadHandler = (event) => {
-        props.applySort(event.target.name);
+        console.log(event.target);
+        console.log(event.target.dataset.name);
+        props.applySort(event.target.dataset.name);
     }
     const [isActiveEditor, setActiveEditor] = useState(false);
     const addButtonHandler = () => {
@@ -17,11 +19,13 @@ function Table(props) {
     const theadBuilder = (columnsList) => {
         const columnNames = columnsList.map((column, index) =>
             <td key={index}>
-                <button className={css.thead_btn} name={column.name} onClick={theadHandler}>
-                    {column.label}
-                    {(props.sortMode === column.name) ?
-                        ((props.sortDirection === 'asc') ? ' ▲' : ' ▼') :
-                        ''}
+                <button className={css.keyboard_focus_button} tabIndex="0" name={column.name} data-name={column.name} onClick={theadHandler}>
+                    <span className={css.keyboard_focus_button__label} tabIndex="-1" data-name={column.name} >{column.label}
+                        {(props.sortMode === column.name) ?
+                            ((props.sortDirection === 'asc') ? ' ▲' : ' ▼') :
+                            ''
+                        }
+                    </span>
                 </button>
             </td>
         )

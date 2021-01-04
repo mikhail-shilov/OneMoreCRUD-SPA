@@ -12,14 +12,16 @@ function FullData(props) {
                             <span
                                 className='userFullData__label'>Адрес проживания: <b>{props.userCard.streetAddress}</b></span>
                             <span className='userFullData__label'>Город: <b>{props.userCard.city}</b></span>
-                            <span className='userFullData__label'>Провинция/штат: <b>{props.userCard.province}</b></span>
+                            <span
+                                className='userFullData__label'>Провинция/штат: <b>{props.userCard.province}</b></span>
                             <span className='userFullData__label'>Индекс: <b>{props.userCard.zip}</b></span>
                         </div>
                         <div className='userFullData__col2'>
-                            <span className='userFullData__label'>Описание: <textarea
+                            <span className='userFullData__label'>Описание:</span>
+                            <textarea
                                 readOnly
                                 className='userFullData__description'
-                                value={props.userCard.description}></textarea></span>
+                                value={props.userCard.description}></textarea>
                         </div>
                     </div>
                 </div>

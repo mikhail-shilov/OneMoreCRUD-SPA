@@ -32,12 +32,14 @@ function Filter(props) {
             <input
                 className='filter__input'
                 value={draft}
-                placeholder={!(draft === '')? draft : 'Part of firstname or lastname...'}
+                placeholder={!(draft === '') ? draft : 'Part of firstname or lastname...'}
                 onChange={updateValue}
                 onKeyPress={keyHandler}
             />
-            <button className='filter__button' onClick={findHandler}>Filter</button>
-            <button className='filter__button' onClick={clearHandler}>Clear</button>
+            <div>
+                <button className='filter__button' onClick={findHandler}>Filter</button>
+                <button className='filter__button' onClick={clearHandler}>Clear</button>
+            </div>
         </div>
     );
 }
@@ -49,4 +51,4 @@ const mapStateToProps = (state) => {
     }
 };
 
-export default connect(mapStateToProps,{applyFilter})(Filter);
+export default connect(mapStateToProps, {applyFilter})(Filter);
